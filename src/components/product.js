@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 import { Card, CardMedia, CardContent, Typography, withStyles, CardActionArea, Button, CardActions, Paper, Icon } from '@material-ui/core'
+import { addToCart } from '../redux/actions';
+import { connect } from 'react-redux';
 
 const styles = {
     card: {
         margin: 10,
-        borderRadius: 10
-        , textAlign: "center"
+        borderRadius: 10,
+        textAlign: "center"
     },
     image: {
         height: 250,
@@ -50,7 +52,12 @@ export class product extends Component {
                     </CardActionArea>
                     <CardActions className={classes.center}>
                         <Typography gutterBottom variant="p" component="p"> $ {price * 50}</Typography>
-                        <Button size="small" color="primary" className={classes.end} startIcon={<Icon>shopping_cart_icon</Icon>}>
+                        <Button
+                            onClick={() => this.props.addToCart(this.props.product)}
+                            size="small"
+                            color="primary"
+                            className={classes.end}
+                            startIcon={<Icon>shopping_cart_icon</Icon>}>
                             Add To Cart
                         </Button>
 
@@ -61,4 +68,4 @@ export class product extends Component {
     }
 }
 
-export default withStyles(styles)(product)
+export default connect(null, { addToCart })(withStyles(styles)(product))

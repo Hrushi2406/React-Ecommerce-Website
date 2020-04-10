@@ -11,13 +11,13 @@ import { createStore } from 'redux'
 
 
 //Pages
-import home from './components/home'
-import cart from './components/cart'
-import login from './components/login'
-import signUp from './components/signUp'
+import home from './pages/home'
+import cart from './pages/cart'
+import login from './pages/login'
+import signUp from './pages/signUp'
 import Navbar from './components/navbar'
 import { red } from '@material-ui/core/colors';
-import overview from './components/overview';
+import overview from './pages/overview';
 import reducers from './redux/reducers'
 
 

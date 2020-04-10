@@ -24,15 +24,6 @@ const styles = {
 
 
 class overview extends Component {
-    // state = {
-    //     product: {}
-    // }
-    // componentDidMount() {
-    //     this.setState({
-    //         product: storeProducts.find(prod => prod.id == this.props.match.params.id)
-    //     })
-    // }
-
     render() {
         const { classes } = this.props;
         var product = this.props.products.find(prod => prod.id == this.props.match.params.id)

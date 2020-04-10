@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Grid, withStyles, Card, CardMedia, Typography, GridListTile, GridList } from '@material-ui/core'
 import { storeProducts } from '../data'
 
-import Product from "./product";
+import Product from "../components/product";
 import { connect } from 'react-redux';
 
 const styles = {

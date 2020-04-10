@@ -12,6 +12,9 @@ const cartReducer = (state = [], action) => {
     else if (action.type === "GET_CART_ITEMS") {
         return action.payload
     }
+    else if (action.type === "REMOVE_CART_ITEM") {
+        return action.payload
+    }
     return state
 }
 
