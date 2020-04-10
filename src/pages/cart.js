@@ -15,7 +15,8 @@ const styles = {
 
     },
     card: {
-        paddingBottom: 0
+        paddingBottom: 0,
+        borderRadius: 5,
     },
     details: {
         display: 'flex',
@@ -50,13 +51,13 @@ class cart extends Component {
                         :
                         <Grid container spacing={2}>
                             <Grid item sm={8} xs={12} >
-                                {cartItems.map(item => <CartItem item={item} />)}
+                                {cartItems.map(item => <CartItem item={item} key={item.id} />)}
                             </Grid>
 
-                            <Grid item sm={4}>
-                                <Card >
+                            <Grid item sm={4} xs={12}>
+                                <Card className={classes.card} elevation={0}>
 
-                                    <CardContent className={classes.card} style={{ paddingBottom: 0 }}>
+                                    <CardContent style={{ paddingBottom: 0 }}>
                                         <Typography gutterBottom variant='h5' color='textSecondary'>Price Details</Typography>
                                         <Divider />
                                         <div className={classes.details}>

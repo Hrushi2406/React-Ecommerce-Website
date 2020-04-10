@@ -2,7 +2,7 @@ export const addToCart = item => {
     var cartItems =
         localStorage.getItem('cartItems');
     var temp = JSON.parse(cartItems) ?? [];
-    item.count++;
+    item.count = 1;
     item.inCart = true
     temp.push(item);
 

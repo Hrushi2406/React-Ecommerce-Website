@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { Card, CardMedia, CardContent, Typography, withStyles, Grid, Icon, CardActions, Button, IconButton } from '@material-ui/core'
+import { Card, CardMedia, CardContent, Typography, withStyles, Grid, Icon, CardActions, Button, IconButton, CardActionArea } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { removeItem, increaseCount, decreaseCount } from '../redux/actions'
+import { Link } from 'react-router-dom'
 
 const styles = {
     card: {
         display: 'flex',
         marginBottom: 20,
-
+        borderRadius: 10,
     },
     image: {
         minWidth: 200,
@@ -63,7 +64,7 @@ export class cartItem extends Component {
 
             < div >
                 <Card className={classes.card} elevation={0}>
-                    <CardMedia
+                    <CardMedia component={Link} to={'/mobileOverview/' + id}
                         image={img}
                         title={title}
                         className={classes.image}
@@ -79,6 +80,7 @@ export class cartItem extends Component {
                                 <Typography variant='h6'>${count * (price * 50)}</Typography>
                             </Grid>
                         </Grid>
+
                         <Grid container className={classes.grid}>
                             <Grid item className={classes.grid} sm={9}>
                                 <IconButton
@@ -103,7 +105,6 @@ export class cartItem extends Component {
 
 
                     </CardContent>
-
 
                 </Card>
             </div >

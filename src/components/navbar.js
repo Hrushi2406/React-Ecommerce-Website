@@ -20,7 +20,7 @@ export class Navbar extends Component {
         return (
             <AppBar position='fixed'>
                 <Toolbar variant='dense' className={classes.center}>
-                    <Button color='inherit'>Home</Button>
+                    <Button color='inherit' component={Link} to='/'>Home</Button>
                     {/* <Link to='/cart'> */}
                     <Button color='inherit' component={Link} to='/cart' startIcon={<Icon>shopping_cart_icon</Icon>} > Cart</Button>
                     {/* </Link> */}

@@ -40,15 +40,16 @@ export class App extends Component {
             <Router>
               <Navbar />
               <div className='container'>
+                <Container maxWidth='lg'>
+                  <Switch>
+                    <Route exact path='/' component={home} />
+                    <Route exact path='/login' component={login} />
+                    <Route exact path='/signUp' component={signUp} />
+                    <Route exact path='/cart' component={cart} />
+                    <Route exact path='/mobileOverview/:id' component={overview} />
 
-                <Switch>
-                  <Route exact path='/' component={home} />
-                  <Route exact path='/login' component={login} />
-                  <Route exact path='/signUp' component={signUp} />
-                  <Route exact path='/cart' component={cart} />
-                  <Route exact path='/mobileOverview/:id' component={overview} />
-
-                </Switch>
+                  </Switch>
+                </Container>
 
               </div>
             </Router>
