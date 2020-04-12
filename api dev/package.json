@@ -1,0 +1,26 @@
+{
+  "name": "leather_api",
+  "version": "1.0.0",
+  "engines": {
+    "node": "12.16.x"
+  },
+  "description": "Api for the leather website",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "keywords": [
+    "heroku",
+    "leather"
+  ],
+  "author": "Hrushikesh Kuklare",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "firebase-admin": "^8.10.0",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
