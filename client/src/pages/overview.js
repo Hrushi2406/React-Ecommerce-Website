@@ -43,8 +43,8 @@ class overview extends Component {
                         </div>
                         <Typography gutterBottom variant='h6' className={classes.price}>Price: $ {price * 50}</Typography>
                         <Grid container className={classes.center}>
-                            <Button variant='contained' > Buy Now</Button>
-                            {inCart ? <div></div> : <Button color="primary" onClick={() => this.props.addToCart(product)} > Add to Cart</Button>}
+                            <Button variant='contained' color='primary' disableElevation> Buy Now</Button>
+                            {inCart ? <div></div> : <Button color="secondary" onClick={() => this.props.addToCart(product)} > Add to Cart</Button>}
                         </Grid>
 
                     </Grid>

@@ -16,7 +16,7 @@ class home extends Component {
         const { classes, products } = this.props
         return (
             <div>
-                <Grid container spacing={0} >
+                <Grid container  >
                     {products.map(product =>
 
                         <Grid item key={product.id} sm={3} xs={12} >

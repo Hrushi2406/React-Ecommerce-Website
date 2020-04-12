@@ -9,7 +9,8 @@ const styles = {
     card: {
         margin: 10,
         borderRadius: 10,
-        textAlign: "center"
+        textAlign: "center",
+        backgroundColor: "#f3f9fb"
     },
     image: {
         height: 250,
@@ -55,7 +56,7 @@ export class product extends Component {
                         <Button
                             onClick={() => this.props.addToCart(this.props.product)}
                             size="small"
-                            color="primary"
+                            color="secondary"
                             className={classes.end}
                             startIcon={<Icon>shopping_cart_icon</Icon>}>
                             Add To Cart

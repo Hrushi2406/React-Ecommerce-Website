@@ -20,11 +20,49 @@ import { red } from '@material-ui/core/colors';
 import overview from './pages/overview';
 import reducers from './redux/reducers'
 
-
+// let colorPallete = {
+//   "#f5feff",
+//   "#bde4f4",
+//   "#404969",
+//   "#dc552c",
+//   "#f3f9fb"
+//  }
 
 const theme = createMuiTheme({
   palette: {
-    primary: red
+    primary: {
+      main: "#404969"
+    },
+    secondary: {
+      main: "#dc552c"
+    }
+  },
+  typography: {
+    button: {
+
+      borderRadius: 10,
+      textTransform: 'none',
+      fontSize: 16,
+      fontWeight: "600",
+      fontFamily: 'Nunito',
+    },
+    h4: {
+      fontFamily: 'Nunito',
+      fontWeight: "600",
+    },
+    h6: {
+      fontFamily: 'Open Sans',
+      fontWeight: "600",
+    },
+    body2: {
+      fontFamily: 'Montserrat',
+    },
+    body1: {
+      fontFamily: 'Montserrat',
+    }
+  },
+  button1: {
+    borderRadius: 10,
   }
 })
 

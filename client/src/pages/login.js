@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { TextField, withStyles, Button, Typography } from '@material-ui/core'
 
-const styles = {
+const styles = (theme) => ({
     container: {
         position: 'absolute',
         top: '50%',
@@ -13,10 +13,11 @@ const styles = {
         margin: "10px 0"
     },
     button: {
+        backgroundColor: '#404969',
+        borderRadius: 10,
         marginTop: 20,
-        width: "100%"
     }
-}
+})
 
 export class login extends Component {
     state = {
@@ -60,7 +61,7 @@ export class login extends Component {
                         onChange={this.handleChange}
                         className={classes.textField}
                         fullWidth />
-                    <Button type='submit' variant="contained" color='primary' className={classes.button}>Login</Button>
+                    <Button type='submit' fullWidth variant="contained" color='primary' className={classes.button}>Login</Button>
                 </form>
 
 

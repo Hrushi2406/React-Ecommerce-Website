@@ -1,22 +1,23 @@
 import React, { Component } from 'react'
 import { TextField, withStyles, Button, Typography } from '@material-ui/core'
 
-const styles = {
+
+const styles = (theme) => ({
     container: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%,-80%)',
-        textAlign: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
     },
     textField: {
         margin: "10px 0"
     },
     button: {
+        backgroundColor: '#404969',
+        borderRadius: 10,
         marginTop: 20,
-        width: "100%"
     }
-}
+})
+
 export class signUp extends Component {
     state = {
         email: '',
@@ -35,7 +36,7 @@ export class signUp extends Component {
         })
     }
     render() {
-        const { classes } = this.props
+        const { classes } = this.props;
         return (
             <div className={classes.container}>
                 <Typography gutterBottom variant='h4'> Sign Up </Typography>
@@ -59,17 +60,7 @@ export class signUp extends Component {
                         onChange={this.handleChange}
                         className={classes.textField}
                         fullWidth />
-                    <TextField
-                        id="standard-basic"
-                        label="Confirm Password"
-                        name="confirmPassword   "
-                        type="password"
-                        autoComplete="current-password"
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                        fullWidth />
-                    <Button type='submit' variant="contained" color='primary' className={classes.button}>Sign Up</Button>
+                    <Button type='submit' fullWidth variant="contained" color='primary' className={classes.button}>Sign Up</Button>
                 </form>
 
 
