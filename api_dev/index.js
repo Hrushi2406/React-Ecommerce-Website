@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 //Routes Import
-const { login } = require('./routes/authRoutes')
+const { login, signUp } = require('./routes/authRoutes')
 
 
 
@@ -18,6 +18,8 @@ const PORT = process.env.PORT || 5000
 
 //ROUTES
 app.post('/login', login)
+app.post('/signUp', signUp)
+
 
 
 
