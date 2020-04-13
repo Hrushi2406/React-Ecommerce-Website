@@ -1,34 +1,32 @@
 import React, { Component } from 'react'
-import { TextField, withStyles, Button, Typography } from '@material-ui/core'
+import { TextField, withStyles, Button, Typography, Icon, InputAdornment, CircularProgress } from '@material-ui/core'
+import axios from 'axios'
+import api from '../redux/actions/apiCreate'
+
+import { loginUser } from "../redux/actions/userAction";
+import { connect } from 'react-redux';
 
 const styles = (theme) => ({
-    container: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%,-80%)',
-        textAlign: "center",
-    },
-    textField: {
-        margin: "10px 0"
-    },
-    button: {
-        backgroundColor: '#404969',
-        borderRadius: 10,
-        marginTop: 20,
-    }
+    container: theme.props.container,
+    textField: theme.props.textField,
+    button: theme.props.button1,
 })
 
 export class login extends Component {
     state = {
         email: '',
         password: '',
-        error: '',
+        loading: false,
+        errors: {},
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.history.push('/')
+        const userData = {
+            email: this.state.email,
+            password: this.state.password
+        }
+        this.props.loginUser(userData)
     }
 
     handleChange = (e) => {
@@ -36,38 +34,73 @@ export class login extends Component {
             [e.target.name]: e.target.value
         })
     }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.ui.errors) {
+            this.setState({ errors: nextProps.ui.errors })
+        }
+    }
+
+
     render() {
-        const { classes } = this.props;
+        const { classes, ui: { loading } } = this.props;
+        const { errors } = this.state
         return (
-            <div className={classes.container}>
-                <Typography gutterBottom variant='h4'> Login </Typography>
-                <form noValidate onSubmit={this.handleSubmit}>
-                    <TextField
-                        id="standard-basic"
-                        label="Email"
-                        name="email"
-                        type='email'
-                        value={this.state.email}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                        fullWidth />
-                    <TextField
-                        id="standard-basic"
-                        label="Password"
-                        name="password"
-                        type="password"
-                        autoComplete="current-password"
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                        className={classes.textField}
-                        fullWidth />
-                    <Button type='submit' fullWidth variant="contained" color='primary' className={classes.button}>Login</Button>
-                </form>
+            <div className="paddedContainer">
+
+                <div className={classes.container}>
+                    <Typography gutterBottom variant='h4'> Login </Typography>
+                    <form noValidate onSubmit={this.handleSubmit}>
+
+                        <TextField
+                            id="standard-basic-1"
+                            variant="outlined"
+                            label="Email"
+                            margin="dense"
+                            name="email"
+                            type='email'
+                            helperText={errors.email}
+                            error={errors.email ? true : false}
+                            value={this.state.email}
+                            onChange={this.handleChange}
+                            className={classes.textField}
+                            fullWidth />
+                        <TextField
+                            id="standard-basic-2"
+                            variant="outlined"
+                            margin="dense"
+                            size='medium'
+                            label="Password"
+                            name="password"
+                            type="password"
+                            autoComplete="current-password"
+                            helperText={errors.password}
+                            error={errors.password ? true : false}
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                            className={classes.textField}
+                            fullWidth />
+                        <Button
+                            type='submit'
+                            variant="contained"
+                            color='primary'
+                            className={classes.button}
+                            fullWidth >
+                            {loading ? <CircularProgress color='inherit' /> : "Login"}
+                        </Button>
+                    </form>
 
 
+                </div>
             </div>
+
         )
     }
 }
 
-export default withStyles(styles)(login)
+const mapStateToProps = state => ({
+    user: state.user,
+    ui: state.ui
+})
+
+export default connect(mapStateToProps, { loginUser })(withStyles(styles)(login))

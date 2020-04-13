@@ -16,5 +16,18 @@ code {
 
 .container {
   margin: 80px auto 0 auto;
-  /* max-width: 1200px; */
+}
+
+button {
+  border-radius: 100px;
+}
+
+.paddedContainer {
+  margin: 0 25%;
+}
+
+@media screen and (max-width: 720px) {
+  .paddedContainer {
+    margin: 0;
+  }
 }

@@ -16,9 +16,9 @@ import cart from './pages/cart'
 import login from './pages/login'
 import signUp from './pages/signUp'
 import Navbar from './components/navbar'
-import { red } from '@material-ui/core/colors';
 import overview from './pages/overview';
 import reducers from './redux/reducers'
+import store from './redux/store';
 
 // let colorPallete = {
 //   "#f5feff",
@@ -37,9 +37,15 @@ const theme = createMuiTheme({
       main: "#dc552c"
     }
   },
+  overrides: {
+    MuiButton: {
+      root: {
+        borderRadius: 10
+      }
+    }
+  },
   typography: {
     button: {
-
       borderRadius: 10,
       textTransform: 'none',
       fontSize: 16,
@@ -61,8 +67,18 @@ const theme = createMuiTheme({
       fontFamily: 'Montserrat',
     }
   },
-  button1: {
-    borderRadius: 10,
+  props: {
+    button1: {
+      marginTop: 20,
+    },
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    textField: {
+      margin: "10px 0"
+    },
   }
 })
 
@@ -72,7 +88,7 @@ export class App extends Component {
 
     return (
       <MuiThemeProvider theme={theme}>
-        <Provider store={createStore(reducers)}>
+        <Provider store={store}>
 
           <div>
             <Router>
