@@ -6,7 +6,6 @@ const dotenv = require('dotenv').config()
 const { loginValidator, signUpValidator } = require('../utils/validator')
 const { db } = require('../utils/admin')
 
-
 //LOGIN ROUTE
 exports.login = async (req, res) => {
     const user = {
@@ -17,13 +16,15 @@ exports.login = async (req, res) => {
     try {
         const { error, valid } = loginValidator(user)
         errors = error;
+        console.log(errors)
+
         if (!valid) {
-            throw errors;
+            res.status(400).json(errors)
         }
         let response = await db.collection('users').where('email', '==', user.email).get()
         if (response.empty) {
             errors.email = "This user doesn't exist";
-            throw errors
+            res.status(400).json(errors)
         }
         let data = response.docs[0].data()
         let result = await bcrypt.compare(user.password, data.password);
@@ -31,11 +32,11 @@ exports.login = async (req, res) => {
             var token = jwt.sign({ id: data.userId }, process.env.ACCESS_TOKEN_SECRET)
         } else {
             errors.password = "Password is Incorrect"
-            throw errors
+            res.status(400).json(errors)
         }
         res.status(200).json({ token: token, auth: result, userData: data })
     } catch (error) {
-        res.status(500).json({ errors: errors })
+        res.status(500).json({ errors: error.code })
     }
 }
 
@@ -56,7 +57,7 @@ exports.signUp = async (req, res) => {
         const { error, valid } = signUpValidator(user)
         errors = error;
         if (!valid) {
-            throw errors;
+            res.status(400).json(errors)
         }
         let response = await db.collection('users').where('email', '==', user.email).get()
         if (response.empty) {
@@ -71,9 +72,9 @@ exports.signUp = async (req, res) => {
         }
         else {
             error.email = 'This user already exists'
-            throw error
+            res.status(400).json(errors)
         }
     } catch (error) {
-        res.status(500).json({ errors: errors })
+        res.status(500).json({ errors: error.code })
     }
 }
