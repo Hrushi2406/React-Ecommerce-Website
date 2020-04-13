@@ -14,10 +14,11 @@ export default function (state = initialState, action) {
                 errors: action.payload
             }
         case CLEAR_ERRORS:
+
             return {
                 ...state,
                 loading: false,
-                errros: null
+                errors: {},
             }
         case LOADING_UI:
             return {
