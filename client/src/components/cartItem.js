@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Card, CardMedia, CardContent, Typography, withStyles, Grid, Icon, CardActions, Button, IconButton, CardActionArea } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { removeItem, increaseCount, decreaseCount } from '../redux/actions'
 import { Link } from 'react-router-dom'
 
 const styles = {
@@ -85,21 +84,21 @@ export class cartItem extends Component {
                             <Grid item className={classes.grid} sm={9}>
                                 <IconButton
                                     aria-label='remove_icon'
-                                    onClick={() => this.props.decreaseCount(id)}
+                                    onClick={() => console.log('hi')}
                                     className={classes.button}>
                                     <Icon>remove_icon</Icon>
                                 </IconButton>
                                 <p className={classes.count}>{count}</p>
                                 <IconButton
                                     aria-label='add_icon'
-                                    onClick={() => this.props.increaseCount(id)}
+                                    onClick={() => console.log('hi')}
                                     className={classes.button}>
                                     <Icon>add_icon</Icon>
                                 </IconButton>
                             </Grid>
 
                             <Grid item sm={3}>
-                                <Button color='primary' onClick={() => this.props.removeItem(id)}>Remove Item</Button>
+                                <Button color='primary' onClick={() => console.log('hi')}>Remove Item</Button>
                             </Grid>
                         </Grid>
 
@@ -112,4 +111,4 @@ export class cartItem extends Component {
     }
 }
 
-export default connect(null, { removeItem, decreaseCount, increaseCount })(withStyles(styles)(cartItem))
+export default connect(null)(withStyles(styles)(cartItem))

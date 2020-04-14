@@ -1,31 +1,84 @@
 import React, { Component } from 'react'
-import { Grid, withStyles, Card, CardMedia, Typography, GridListTile, GridList } from '@material-ui/core'
+import { Grid, withStyles, Card, CardMedia, Typography, GridListTile, GridList, CircularProgress, Button, Divider } from '@material-ui/core'
 import { storeProducts } from '../data'
-
 import Product from "../components/product";
 import { connect } from 'react-redux';
 
-const styles = {
+import { Link } from 'react-router-dom'
 
-}
+import { getProducts, clearArray } from '../redux/actions/productAction'
+
+const styles = theme => ({
+    main: {
+        marginBottom: 20,
+    },
+    container: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    divider: {
+        marginTop: 5,
+        marginBottom: 10,
+    }
+    ,
+    center: theme.props.center,
+})
+
 
 
 class home extends Component {
+    componentDidMount() {
+
+
+        if (Object.keys(this.props.products).length === 0) {
+            this.props.getProducts()
+        }
+
+    }
+
+
 
     render() {
-        const { classes, products } = this.props
+        const { classes, products, ui: { loading } } = this.props
+
         return (
             <div>
-                <Grid container  >
-                    {products.map(product =>
+                {
+                    loading ?
+                        <div className={classes.center}>
+                            <CircularProgress />
+                        </div>
+                        :
+                        Object.keys(products).map(key => {
+                            return <div key={key} className={classes.main}>
+                                <div className={classes.container}>
+                                    <Typography variant='h5'>{key.toUpperCase()}</Typography>
+                                    <Button
+                                        color='primary'
+                                        disableElevation
+                                        component={Link}
+                                        onClick={() => this.props.clearArray()}
+                                        to={'/products/' + key} >
+                                        View All
+                                 </Button>
+                                </div>
+                                <Divider className={classes.divider} />
+                                <Grid container>
+                                    {products[key].map(product =>
+                                        <Grid item key={product.product_code} sm={3} xs={12} >
+                                            <Product product={product} />
+                                        </Grid>
+                                    )}
+                                </Grid>
 
-                        <Grid item key={product.id} sm={3} xs={12} >
-                            <Product product={product} />
-                        </Grid>
-                    )
-                    }
+                            </div>
 
-                </Grid>
+                        })
+
+
+                }
+
 
             </div>
         )
@@ -33,8 +86,7 @@ class home extends Component {
 }
 
 const mapStateToProps = state => {
-
-    return { products: state.products };
+    return { ui: state.ui, user: state.user, products: state.products.productsData };
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(home))
+export default connect(mapStateToProps, { getProducts, clearArray })(withStyles(styles)(home))

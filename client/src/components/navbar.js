@@ -10,7 +10,10 @@ const styles = {
         display: 'flex',
         flexDirection: "row",
         justifyContent: 'space-between'
+    },
+    appBar: {
     }
+
 }
 
 
@@ -18,7 +21,7 @@ export class Navbar extends Component {
     render() {
         const { classes } = this.props
         return (
-            <AppBar position='static' >
+            <AppBar position='static' color='primary' className={classes.appBar} >
                 <Container>
                     <Toolbar disableGutters variant='dense' className={classes.center}>
                         <Button color='inherit' component={Link} to='/'>Home</Button>

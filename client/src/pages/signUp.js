@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { TextField, withStyles, Button, Typography, CircularProgress } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { signUpUser } from "../redux/actions/userAction";
-import DatePicker from "react-datepicker";
 
 // import DateFnsUtils from '@date-io/date-fns';
 

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Typography, Grid, Avatar, withStyles, Button } from '@material-ui/core';
 import { storeProducts } from '../data';
 import { connect } from 'react-redux';
-import { addToCart } from '../redux/actions'
 
 
 const styles = {
@@ -44,7 +43,7 @@ class overview extends Component {
                         <Typography gutterBottom variant='h6' className={classes.price}>Price: $ {price * 50}</Typography>
                         <Grid container className={classes.center}>
                             <Button variant='contained' color='primary' disableElevation> Buy Now</Button>
-                            {inCart ? <div></div> : <Button color="secondary" onClick={() => this.props.addToCart(product)} > Add to Cart</Button>}
+                            {inCart ? <div></div> : <Button color="secondary" onClick={() => console.log('hi')} > Add to Cart</Button>}
                         </Grid>
 
                     </Grid>
@@ -60,4 +59,4 @@ const mapStateToProps = state => {
     return { products: state.products };
 }
 
-export default connect(mapStateToProps, { addToCart })(withStyles(styles)(overview))
+export default connect(mapStateToProps)(withStyles(styles)(overview))

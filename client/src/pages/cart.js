@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Grid, Card, CardContent, Typography, withStyles, Divider, Button } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { getCartItems } from '../redux/actions'
 import Product from "../components/product";
 import CartItem from '../components/cartItem';
 import { Link } from 'react-router-dom';
@@ -32,7 +31,7 @@ const styles = {
 
 class cart extends Component {
     componentDidMount() {
-        this.props.getCartItems()
+
     }
 
     render() {
@@ -83,5 +82,5 @@ const mapStateToProps = state => {
     return { cartItems: state.cart };
 }
 
-export default connect(mapStateToProps, { getCartItems })(withStyles(styles)(cart))
+export default connect(mapStateToProps)(withStyles(styles)(cart))
 

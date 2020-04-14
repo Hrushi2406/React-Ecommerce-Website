@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 
 //Reducers
 import userReducer from './reducers/userReducer'
-import dataReducer from './reducers/dataReducer'
+import productReducer from './reducers/productReducer'
 import uiReducer from './reducers/uiReducer'
 
 
@@ -15,7 +15,7 @@ const middleware = [thunk]
 
 const reducers = combineReducers({
     user: userReducer,
-    data: dataReducer,
+    products: productReducer,
     ui: uiReducer
 })
 

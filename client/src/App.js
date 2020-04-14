@@ -14,10 +14,10 @@ import { createStore } from 'redux'
 import home from './pages/home'
 import cart from './pages/cart'
 import login from './pages/login'
+import categoryView from './pages/categoryView'
 import signUp from './pages/signUp'
 import Navbar from './components/navbar'
-import overview from './pages/overview';
-import reducers from './redux/reducers'
+import overview from './pages/categoryOverview';
 import store from './redux/store';
 
 // let colorPallete = {
@@ -56,6 +56,11 @@ const theme = createMuiTheme({
       fontFamily: 'Nunito',
       fontWeight: "600",
     },
+    h5: {
+      fontFamily: 'Montserrat',
+      fontWeight: "400",
+      letterSpacing: 5
+    },
     h6: {
       fontFamily: 'Open Sans',
       fontWeight: "600",
@@ -65,7 +70,10 @@ const theme = createMuiTheme({
     },
     body1: {
       fontFamily: 'Montserrat',
-    }
+    },
+    caption: {
+      fontFamily: 'Montserrat',
+    },
   },
   props: {
     button1: {
@@ -79,6 +87,12 @@ const theme = createMuiTheme({
     textField: {
       margin: "10px 0"
     },
+    center: {
+      position: 'absolute',
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%,-50%)"
+    }
   }
 })
 
@@ -100,8 +114,8 @@ export class App extends Component {
                     <Route exact path='/login' component={login} />
                     <Route exact path='/signUp' component={signUp} />
                     <Route exact path='/cart' component={cart} />
-                    <Route exact path='/mobileOverview/:id' component={overview} />
-
+                    <Route exact path='/products/:key' component={categoryView} />
+                    <Route exact path='/categoryView/:productId' component={overview} />
                   </Switch>
                 </Container>
 
