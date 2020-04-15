@@ -24,13 +24,23 @@ export const clearArray = () => (dispatch) => {
     dispatch({ type: CLEAR_ARRAY })
 }
 
-export const viewAll = (key, page) => async (dispatch) => {
+export const viewAll = (key, page, sortBy = "", sortOrder = "", category1 = "", category3 = "") => async (dispatch) => {
     try {
-        let response = await api.get('/products/' + key, { params: { page: page } })
+        let response = await api.get('/products/' + key,
+            {
+                params: {
+                    page: page,
+                    sortBy: sortBy,
+                    sortOrder: sortOrder,
+                    category1: category1,
+                    category3: category3
+                }
+            })
         dispatch({
             type: SET_CATEGORY_PRODUCT,
             payload: response.data
         })
+        console.log("data", response.data.categoryData)
     } catch (err) {
         console.log(err.response.data)
         dispatch({

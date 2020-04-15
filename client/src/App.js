@@ -17,7 +17,7 @@ import login from './pages/login'
 import categoryView from './pages/categoryView'
 import signUp from './pages/signUp'
 import Navbar from './components/navbar'
-import overview from './pages/categoryOverview';
+import overview from './pages/overview';
 import store from './redux/store';
 
 // let colorPallete = {

@@ -44,7 +44,8 @@ export class categoryView extends Component {
 
     loadMore = (page) => {
         page = page + 1
-        this.props.viewAll(this.props.match.params.key, page)
+        const { sortBy, sortOrder, category1, category3 } = this.props.products.paginateInfo
+        this.props.viewAll(this.props.match.params.key, page, sortBy, sortOrder, category1, category3)
 
     }
 
@@ -56,7 +57,7 @@ export class categoryView extends Component {
         return (
 
             <InfiniteScroller
-                pageStart={0}
+                pageStart={-1}
                 initialLoad={false}
                 loadMore={this.loadMore}
                 hasMore={hasMore}
@@ -65,7 +66,7 @@ export class categoryView extends Component {
                 <div className={classes.main}>
 
                     <div className={classes.container}>
-                        <SortDialog />
+                        <SortDialog paginateInfo={this.props.products.paginateInfo} />
                         <Typography variant='h5'>{key && key.toUpperCase()}</Typography>
                         <FilterDialog />
                     </div>

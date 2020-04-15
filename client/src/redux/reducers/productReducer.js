@@ -5,7 +5,15 @@ const initalState = {
     viewCategoryData: {
         categoryData: [],
         paginateInfo: {
-            hasMore: true
+            hasMore: true,
+            category1: "",
+            category3: "",
+            sortBy: "",
+            sortOrder: 'asc',
+            categories: {
+                category1: [],
+                category3: []
+            }
         }
     }
 }

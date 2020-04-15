@@ -16,6 +16,9 @@ const styles = {
     image: {
         height: 250,
         backgroundSize: "cover",
+        backgroundPosition: "center",
+        transition: "0.2s",
+
     },
     container: {
         display: 'flex',
@@ -60,6 +63,7 @@ export class product extends Component {
                             image={product_images[0]}
                             title={title}
                             className={classes.image}
+
                         />
                         <CardContent>
                             <Typography gutterBottom variant="h6" >{loweCase(title)}</Typography>
