@@ -1,4 +1,4 @@
-import { SET_USER, SET_AUTHENTICATED, SET_UNAUTHENTICATED, CLEAR_ARRAY, CLEAR_ERRORS, SET_ERRORS, LOADING_UI, SET_PRODUCT_HOME, SET_CATEGORY_PRODUCT } from "../types";
+import { SET_USER, SET_AUTHENTICATED, SET_OVERVIEW_PRODUCT, SET_UNAUTHENTICATED, CLEAR_ARRAY, CLEAR_ERRORS, SET_ERRORS, LOADING_UI, SET_PRODUCT_HOME, SET_CATEGORY_PRODUCT } from "../types";
 import api from "./apiCreate";
 import Axios from "axios";
 
@@ -46,6 +46,26 @@ export const viewAll = (key, page, sortBy = "", sortOrder = "", category1 = "", 
         dispatch({
             type: SET_ERRORS,
             payload: err.response.data
+        })
+    }
+}
+
+export const fetchProduct = id => async (dispatch) => {
+    try {
+        dispatch({ type: LOADING_UI })
+        let response = await api.get('/fetchProducts', { params: { productId: id } })
+
+        dispatch({ type: CLEAR_ERRORS })
+        dispatch({
+            type: SET_OVERVIEW_PRODUCT,
+            payload: response.data
+        })
+
+    } catch (err) {
+        console.log(err)
+        dispatch({
+            type: SET_ERRORS,
+            payload: err
         })
     }
 }

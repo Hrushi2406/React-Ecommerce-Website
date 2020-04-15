@@ -18,6 +18,7 @@ const styles = {
         backgroundSize: "cover",
         backgroundPosition: "center",
         transition: "0.2s",
+        background: 'left'
 
     },
     container: {
@@ -26,7 +27,6 @@ const styles = {
         alignContent: 'center',
         alignItems: 'center',
         marginTop: 20,
-
     },
     center: {
         display: 'flex',
@@ -58,7 +58,7 @@ export class product extends Component {
         return (
             <div>
                 <Card elevation={0} raised={false} className={classes.card}>
-                    <CardActionArea component={Link} to={{ pathname: '/categoryOverview/' + productId, data: product }} >
+                    <CardActionArea component={Link} to={{ pathname: '/categoryView/' + productId, data: this.props.product }} >
                         <CardMedia
                             image={product_images[0]}
                             title={title}
@@ -96,8 +96,8 @@ export class product extends Component {
                             size="small"
                             color="primary"
                             className={classes.end}
-                            startIcon={<Icon>shopping_cart_icon</Icon>}>
-                            Add To Cart
+                            startIcon={<Icon>local_mall_outlined_icon</Icon>}>
+                            Add to Bag
                         </Button>
 
                     </CardActions>

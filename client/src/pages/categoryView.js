@@ -66,14 +66,14 @@ export class categoryView extends Component {
                 <div className={classes.main}>
 
                     <div className={classes.container}>
-                        <SortDialog paginateInfo={this.props.products.paginateInfo} />
+                        <SortDialog />
                         <Typography variant='h5'>{key && key.toUpperCase()}</Typography>
                         <FilterDialog />
                     </div>
                     <Divider className={classes.divider} />
                     <Grid container>
                         {categoryData.map(product =>
-                            <Grid item key={product.product_code} sm={3} xs={12} >
+                            <Grid item key={product.productId} sm={3} xs={12} >
                                 <Product product={product} />
                             </Grid>
                         )}

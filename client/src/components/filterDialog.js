@@ -97,7 +97,7 @@ export class FilterDialog extends Component {
                             <FormControlLabel value="" control={<Radio />} label={capitalize("none")} />
                             {
                                 categories.category1.map(cat => {
-                                    return <FormControlLabel value={cat} control={<Radio />} label={capitalize(cat)} />
+                                    return <FormControlLabel key={cat} value={cat} control={<Radio />} label={capitalize(cat)} />
                                 })
                             }
                         </RadioGroup>
@@ -108,7 +108,7 @@ export class FilterDialog extends Component {
                             <FormControlLabel value="" control={<Radio />} label={capitalize("none")} />
                             {
                                 categories.category3.map(cat => {
-                                    return <FormControlLabel value={cat} control={<Radio />} label={capitalize(cat)} />
+                                    return <FormControlLabel key={cat} value={cat} control={<Radio />} label={capitalize(cat)} />
                                 })
                             }
                         </RadioGroup>

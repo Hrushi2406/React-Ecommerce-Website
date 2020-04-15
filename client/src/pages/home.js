@@ -66,7 +66,7 @@ class home extends Component {
                                 <Divider className={classes.divider} />
                                 <Grid container>
                                     {products[key].map(product =>
-                                        <Grid item key={product.product_code} sm={3} xs={12} >
+                                        <Grid item key={product.productId} sm={3} xs={12} >
                                             <Product product={product} />
                                         </Grid>
                                     )}

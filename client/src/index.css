@@ -26,8 +26,61 @@ button {
   margin: 0 25%;
 }
 
+.previewImageGrid {
+  display: flex;
+}
+
+.previewDiv {
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: scroll;
+
+}
+
+.previewGrid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.previewImage {
+  width: 24%;
+  height: 200px;
+  margin: 2px 0.33% 2px 0.33%;
+  border-radius: 10px;
+  /* flex-grow: 2; */
+}
+
+.image {
+  width: 60%;
+  height: 500px;
+  margin-bottom: 5px;
+  transition: 0.2s ease-in-out;
+  border-radius: 5px;
+}
+
 @media screen and (max-width: 720px) {
+
+  .container {
+    margin-top: 40px;
+  }
+
   .paddedContainer {
     margin: 0;
+  }
+
+  .previewGrid {
+    display: inline-flex;
+    flex-wrap: nowrap;
+  }
+
+  .previewImage {
+    width: 150px;
+    height: 200px;
+  }
+
+  .image {
+    width: 100%;
+    height: 500px;
+    border-radius: 5px;
   }
 }

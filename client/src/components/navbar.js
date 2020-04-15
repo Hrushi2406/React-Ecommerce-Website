@@ -28,7 +28,8 @@ export class Navbar extends Component {
 
                         <Button color='inherit' component={Link} to='/login'>Login</Button>
                         <Button color='inherit' component={Link} to='/signUp'>SignUp</Button>
-                        <Button color='inherit' component={Link} to='/cart' startIcon={<Icon>shopping_cart_icon</Icon>} > Cart</Button>
+                        <Icon>local_mall_outlined_icon</Icon>
+                        {/* <Button color='inherit' component={Link} to='/cart' startIcon={<Icon>local_mall_rounded_icon</Icon>} > Bag</Button> */}
 
                     </Toolbar>
                 </Container>

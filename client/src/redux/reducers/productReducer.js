@@ -1,7 +1,15 @@
-import { SET_PRODUCT_HOME, SET_CATEGORY_PRODUCT, CLEAR_ARRAY } from "../types";
+import { SET_PRODUCT_HOME, SET_CATEGORY_PRODUCT, CLEAR_ARRAY, SET_OVERVIEW_PRODUCT } from "../types";
 
 const initalState = {
     productsData: {},
+    currentOverview: {
+        product_images: [],
+        labels: [],
+        values: [],
+        category1: "",
+        category2: "",
+        category3: "",
+    },
     viewCategoryData: {
         categoryData: [],
         paginateInfo: {
@@ -39,7 +47,11 @@ export default function (state = initalState, action) {
                 ...state,
                 viewCategoryData: initalState.viewCategoryData
             }
-
+        case SET_OVERVIEW_PRODUCT:
+            return {
+                ...state,
+                currentOverview: action.payload.arrofProducts[0]
+            }
         default:
             return state
     }

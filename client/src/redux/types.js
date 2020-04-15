@@ -13,6 +13,8 @@ export const LOADING_UI = 'LOADING_UI'
 //Data Reducer Types
 export const SET_PRODUCT_HOME = 'SET_PRODUCT_HOME'
 export const SET_CATEGORY_PRODUCT = 'SET_CATEGORY_PRODUCT'
+export const SET_OVERVIEW_PRODUCT = 'SET_OVERVIEW_PRODUCT'
+
 export const CLEAR_ARRAY = 'CLEAR_ARRAY'
 
 
