@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 var cors = require('cors');
 //Routes Import
 const { login, signUp } = require('./routes/authRoutes')
-const { home, viewAll } = require('./routes/dataRoutes')
+const { home, viewAll, fetchProductById } = require('./routes/dataRoutes')
 
 //Middleware
 const verifyAuth = require('./utils/authMiddleware')
@@ -30,6 +30,8 @@ app.post('/api/login', login)
 app.post('/api/signUp', signUp)
 app.get('/api/', home)
 app.get('/api/products/:key', viewAll)
+app.get('/api/fetchProducts', fetchProductById)
+
 
 
 

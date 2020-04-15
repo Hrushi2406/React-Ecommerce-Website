@@ -45,7 +45,7 @@ exports.viewAll = async (req, res) => {
     let category3 = req.query.category3
 
     console.log(page)
-    console.log('Sort Order', sortOrder)
+    console.log('Sort Order', category1)
     try {
         var query = db.collection('products').where('category2', '==', key).limit(8).offset(page * limit)
 
@@ -63,11 +63,54 @@ exports.viewAll = async (req, res) => {
         }
 
         let finalQuery = await query.get()
+        let categoriesQuery = await db.collection('categories').get()
+        let categories = categoriesQuery.docs[0].data()[key]
         let categoryData = getData(finalQuery.docs)
-        let paginateInfo = { key, page, limit, category1, category3, sortBy, orderBy }
+        let paginateInfo = {
+            key,
+            page,
+            limit,
+            category1,
+            category3,
+            sortBy,
+            sortOrder,
+            categories
+        }
         paginateInfo.hasMore = !finalQuery.empty
+
+        // categoryData.forEach((data, i) => console.log(data.discounted_price))
+
         res.status(200).json({ categoryData, paginateInfo })
     } catch (err) {
         res.status(500).json(err)
     }
+}
+
+exports.fetchProductById = async (req, res) => {
+    let productId = req.query.productId
+    console.log(productId.split(", "))
+    let arrOfId = productId.split(", ")
+    let arrofProducts = []
+    let done = false
+
+    arrOfId.forEach(async (id, index) => {
+        try {
+            let response = await db.collection('products').where('productId', '==', id).get()
+            console.log(response.docs.length)
+            if (!response.empty) {
+                let product = response.docs[0].data()
+                arrofProducts.push(product);
+            }
+            else {
+                res.status(400).json({ errors: 'No such product' })
+            }
+            if (arrOfId.length == index + 1) {
+                res.status(200).json({ arrofProducts })
+            }
+        } catch (err) {
+            res.status(500).json(err)
+        }
+
+    })
+
 }
