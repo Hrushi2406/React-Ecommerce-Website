@@ -8,6 +8,7 @@ import SortDialog from '../components/sortDialog';
 import FilterDialog from '../components/filterDialog';
 import InfiniteScroller from 'react-infinite-scroller'
 
+
 const styles = theme => ({
     main: {
         marginBottom: 20,
@@ -28,8 +29,6 @@ const styles = theme => ({
     }
 })
 
-const loweCase = string => string.charAt(0) + string.slice(1).toLowerCase()
-const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
 
 export class categoryView extends Component {
 

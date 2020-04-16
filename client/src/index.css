@@ -34,7 +34,6 @@ button {
   width: 100%;
   overflow-y: hidden;
   overflow-x: scroll;
-
 }
 
 .previewGrid {
@@ -56,6 +55,51 @@ button {
   margin-bottom: 5px;
   transition: 0.2s ease-in-out;
   border-radius: 5px;
+}
+
+.priceDiv {
+  text-align: right;
+}
+
+.cartItemImage {
+  align-self: center;
+  border-radius: 5px;
+  width: 250px;
+  height: 150px;
+}
+
+.divider {
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+/* Checkout */
+
+.stepper {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+  padding: 24px 0 24px 0;
+  margin: 20px 12%;
+
+}
+
+.contentDiv {
+  margin: 30px 12%;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 1px 10px 30px 2px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.summaryHeader {
+  background-color: rgba(0, 0, 0, 0.026);
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+}
+
+.headerTitle {
+  font-size: 20px;
 }
 
 @media screen and (max-width: 720px) {
@@ -83,4 +127,36 @@ button {
     height: 500px;
     border-radius: 5px;
   }
+
+  .priceDiv {
+    text-align: left;
+  }
+
+  .cartItemImage {
+    height: 180px;
+  }
+
+  .divider {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .stepper {
+    margin: 0
+  }
+
+  .contentDiv {
+    margin: 20px 0;
+    padding: 15px;
+  }
+
+  .summaryHeader {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+  }
+
+  .headerTitle {
+    font-size: 15px;
+  }
+
 }

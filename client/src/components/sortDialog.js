@@ -3,6 +3,8 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 
 import { viewAll, clearArray } from '../redux/actions/productAction'
 import { connect } from 'react-redux';
+import { capitalize } from '../utils/functions'
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;

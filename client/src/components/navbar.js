@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 
 //MUI Stuff
 
-import { AppBar, Toolbar, Button, Icon, withStyles, Container } from "@material-ui/core";
+import { AppBar, Toolbar, Button, Icon, withStyles, Container, Badge } from "@material-ui/core";
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { fetchCartItems } from "../redux/actions/cartAction";
 
 const styles = {
     center: {
@@ -18,8 +20,11 @@ const styles = {
 
 
 export class Navbar extends Component {
+    componentDidMount() {
+        this.props.fetchCartItems();
+    }
     render() {
-        const { classes } = this.props
+        const { classes, cart } = this.props
         return (
             <AppBar position='static' color='primary' className={classes.appBar} >
                 <Container>
@@ -28,8 +33,11 @@ export class Navbar extends Component {
 
                         <Button color='inherit' component={Link} to='/login'>Login</Button>
                         <Button color='inherit' component={Link} to='/signUp'>SignUp</Button>
-                        <Icon>local_mall_outlined_icon</Icon>
-                        {/* <Button color='inherit' component={Link} to='/cart' startIcon={<Icon>local_mall_rounded_icon</Icon>} > Bag</Button> */}
+                        <Button color='inherit' component={Link} to='/bag' >
+                            <Badge badgeContent={cart === null ? 0 : cart.length}>
+                                <Icon>local_mall_outlined_icon</Icon>
+                            </Badge>
+                        </Button>
 
                     </Toolbar>
                 </Container>
@@ -38,4 +46,8 @@ export class Navbar extends Component {
     }
 }
 
-export default withStyles(styles)(Navbar)
+const mapStateToProps = state => {
+    return { cart: state.cart.arrOfCartItems };
+}
+
+export default connect(mapStateToProps, { fetchCartItems })(withStyles(styles)(Navbar))

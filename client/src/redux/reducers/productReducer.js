@@ -6,6 +6,7 @@ const initalState = {
         product_images: [],
         labels: [],
         values: [],
+        title: "",
         category1: "",
         category2: "",
         category3: "",

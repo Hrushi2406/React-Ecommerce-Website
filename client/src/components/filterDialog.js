@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Slide, Radio, RadioGroup, FormControlLabel, Typography, Divider, withStyles } from '@material-ui/core'
 import { connect } from 'react-redux';
 import { viewAll, clearArray } from '../redux/actions/productAction'
+import { capitalize } from '../utils/functions'
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -22,7 +23,6 @@ const styles = {
     }
 }
 
-const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
 
 
 export class FilterDialog extends Component {

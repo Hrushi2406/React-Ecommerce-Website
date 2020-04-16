@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
-import { Typography, Grid, Avatar, withStyles, Button, CircularProgress, CardMedia, Icon, Divider } from '@material-ui/core';
+import { Typography, Grid, Avatar, withStyles, Button, CircularProgress, CardMedia, Icon, Divider, SnackbarContent, Snackbar } from '@material-ui/core';
 
 import { connect } from 'react-redux';
 import { fetchProduct } from '../redux/actions/productAction'
+
+import { addToCart } from '../redux/actions/cartAction'
+import { capitalize, lowerCase, TransitionUp } from '../utils/functions'
+import { clearErrors, clearSuccessMessage } from '../redux/actions/uiAction'
+
 
 const styles = theme => ({
 
@@ -63,10 +68,9 @@ const styles = theme => ({
         paddingBottom: 2,
         marginTop: 15,
         borderRadius: 15,
-        background: "#f2f2f2"
+        backgroundColor: "rgba(0, 0, 0, 0.025)",
     },
     label: {
-        fontSize: 17,
         marginRight: 20
     },
     values: {
@@ -75,7 +79,6 @@ const styles = theme => ({
 
 })
 
-const capitalize = string => string.charAt(0).toUpperCase() + string.slice(1)
 
 class overview extends Component {
     state = {
@@ -88,14 +91,23 @@ class overview extends Component {
         }
     }
 
+    handleClose = () => {
+        this.props.clearErrors();
+        this.props.clearSuccessMessage();
+    }
+
     setActiveImage = (i) => {
         this.setState({
             imgIndex: i
         })
     }
 
+    addToCart = () => {
+        this.props.addToCart(this.props.location.data ? this.props.location.data : this.props.product)
+    }
+
     render() {
-        const { classes, ui: { loading } } = this.props;
+        const { classes, ui: { loading, errors, success } } = this.props;
         const { title, description, category1, category2, category3, price, discounted_price, discount, stock, inStock, product_images, labels, values } = this.props.location.data ? this.props.location.data : this.props.product
 
         if (loading) return <div className={classes.center} ><CircularProgress /></div>
@@ -103,6 +115,14 @@ class overview extends Component {
             <div>
                 <Grid container spacing={2}>
 
+                    <Snackbar
+                        open={errors !== null || success !== null}
+                        autoHideDuration={1200}
+                        onClose={this.handleClose}
+                        TransitionComponent={TransitionUp}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                        <SnackbarContent elevation={0} className={classes.snackbar} message={errors !== null ? errors : success} />
+                    </Snackbar>
 
                     {/* IMAGEPART */}
                     <Grid item sm={6} xs={12} className={classes.imgDiv}>
@@ -114,7 +134,6 @@ class overview extends Component {
                                 {
                                     product_images.map((image, i) => {
                                         return <CardMedia key={image} component="div" onClick={() => this.setActiveImage(i)} image={image} className="previewImage" />
-
                                     })
                                 }
                             </div>
@@ -124,11 +143,11 @@ class overview extends Component {
 
                     {/* CONTENTPART */}
                     <Grid item sm={6} xs={12}>
-                        <Typography className={classes.title} gutterBottom variant='h4' color='primary'>{title}</Typography>
+                        <Typography className={classes.title} gutterBottom variant='h4' color='primary'>{lowerCase(title)}</Typography>
                         <Typography className={classes.subtitle} variant='h6' >{capitalize(category1) + "'s " + capitalize(category3) + ' ' + capitalize(category2).slice(0, -1)}</Typography>
                         <div className={classes.descriptionDiv}>
                             <Typography gutterBottom variant='body1' className={classes.description} >{description}</Typography>
-                            <Typography gutterBottom variant='body2' className={classes.stock} color='secondary' >{stock} items available in stock </Typography>
+                            <Typography gutterBottom variant='body2' className={classes.stock} color='secondary' >{stock === 0 ? "Currently out of stock" : stock + " items available in stock"}  </Typography>
                         </div>
 
                         <div className={classes.container}>
@@ -141,7 +160,7 @@ class overview extends Component {
 
                         <div className={classes.spaced}>
                             <Button fullWidth variant='contained' disabled={!inStock} color='primary' disableElevation> Buy Now</Button>
-                            <Button fullWidth color="secondary" startIcon={<Icon>local_mall_rounded_icon</Icon>} > Add to Bag</Button>
+                            <Button fullWidth color="secondary" disabled={!inStock} onClick={this.addToCart} startIcon={<Icon>local_mall_rounded_icon</Icon>} > Add to Bag</Button>
                         </div>
                         <div >
                             <Typography gutterBottom variant='h6' color='primary' className={classes.detailTitle} >Product Details</Typography>
@@ -173,4 +192,4 @@ const mapStateToProps = state => {
     return { ui: state.ui, product: state.products.currentOverview };
 }
 
-export default connect(mapStateToProps, { fetchProduct })(withStyles(styles)(overview))
+export default connect(mapStateToProps, { fetchProduct, addToCart, clearErrors, clearSuccessMessage })(withStyles(styles)(overview))

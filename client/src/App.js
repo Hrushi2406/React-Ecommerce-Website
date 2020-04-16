@@ -12,13 +12,14 @@ import { createStore } from 'redux'
 
 //Pages
 import home from './pages/home'
-import cart from './pages/cart'
+import cart from './pages/bag'
 import login from './pages/login'
 import categoryView from './pages/categoryView'
 import signUp from './pages/signUp'
 import Navbar from './components/navbar'
 import overview from './pages/overview';
 import store from './redux/store';
+import checkout from './pages/checkout';
 
 // let colorPallete = {
 //   "#f5feff",
@@ -92,6 +93,10 @@ const theme = createMuiTheme({
       top: "50%",
       left: "50%",
       transform: "translate(-50%,-50%)"
+    },
+    snackbar: {
+      backgroundColor: "#404969",
+      borderRadius: 5,
     }
   }
 })
@@ -113,9 +118,10 @@ export class App extends Component {
                     <Route exact path='/' component={home} />
                     <Route exact path='/login' component={login} />
                     <Route exact path='/signUp' component={signUp} />
-                    <Route exact path='/cart' component={cart} />
+                    <Route exact path='/bag' component={cart} />
                     <Route exact path='/products/:key' component={categoryView} />
                     <Route exact path='/categoryView/:productId' component={overview} />
+                    <Route exact path='/checkout' component={checkout} />
                   </Switch>
                 </Container>
 

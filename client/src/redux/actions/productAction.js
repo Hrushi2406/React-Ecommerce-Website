@@ -1,6 +1,7 @@
 import { SET_USER, SET_AUTHENTICATED, SET_OVERVIEW_PRODUCT, SET_UNAUTHENTICATED, CLEAR_ARRAY, CLEAR_ERRORS, SET_ERRORS, LOADING_UI, SET_PRODUCT_HOME, SET_CATEGORY_PRODUCT } from "../types";
 import api from "./apiCreate";
 import Axios from "axios";
+import { getIds } from './cartAction'
 
 export const getProducts = () => async (dispatch) => {
     try {
