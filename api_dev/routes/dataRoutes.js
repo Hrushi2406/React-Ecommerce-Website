@@ -1,12 +1,6 @@
 const { db } = require("../utils/admin");
+const { getData } = require('../utils/functions')
 
-getData = (arr) => {
-    let itemArray = []
-    arr.forEach(doc => {
-        itemArray.push(doc.data())
-    });
-    return itemArray
-}
 
 exports.home = async (req, res) => {
     let productData = {}
@@ -91,7 +85,6 @@ exports.fetchProductById = async (req, res) => {
     console.log(productId.split(", "))
     let arrOfId = productId.split(", ")
     let arrofProducts = []
-    let done = false
 
     arrOfId.forEach(async (id, index) => {
         try {
@@ -110,7 +103,6 @@ exports.fetchProductById = async (req, res) => {
         } catch (err) {
             res.status(500).json(err)
         }
-
     })
-
 }
+

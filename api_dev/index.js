@@ -4,7 +4,7 @@ var cors = require('cors');
 //Routes Import
 const { login, signUp } = require('./routes/authRoutes')
 const { home, viewAll, fetchProductById } = require('./routes/dataRoutes')
-
+const { mapProductsToUser, fetchCheckoutProducts, getUserDetails, addAddress, deleteAddress, updateDefaultAddress } = require('./routes/userRoute')
 //Middleware
 const verifyAuth = require('./utils/authMiddleware')
 
@@ -31,10 +31,12 @@ app.post('/api/signUp', signUp)
 app.get('/api/', home)
 app.get('/api/products/:key', viewAll)
 app.get('/api/fetchProducts', fetchProductById)
-
-
-
-
+app.get('/api/userDetails', verifyAuth, getUserDetails)
+app.get('/api/checkoutProducts', verifyAuth, fetchCheckoutProducts)
+app.post('/api/mapProductsToUser', verifyAuth, mapProductsToUser)
+app.post('/api/addAddress', verifyAuth, addAddress)
+app.post('/api/deleteAddress', verifyAuth, deleteAddress)
+app.post('/api/updateDefaultAddress', verifyAuth, updateDefaultAddress)
 
 
 
