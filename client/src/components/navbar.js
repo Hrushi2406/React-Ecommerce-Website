@@ -6,6 +6,8 @@ import { AppBar, Toolbar, Button, Icon, withStyles, Container, Badge } from "@ma
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { fetchCartItems } from "../redux/actions/cartAction";
+import { getUser } from "../redux/actions/userAction";
+
 
 const styles = {
     center: {
@@ -22,6 +24,10 @@ const styles = {
 export class Navbar extends Component {
     componentDidMount() {
         this.props.fetchCartItems();
+        if (localStorage.authToken) {
+            this.props.getUser();
+
+        }
     }
     render() {
         const { classes, cart } = this.props
@@ -50,4 +56,4 @@ const mapStateToProps = state => {
     return { cart: state.cart.arrOfCartItems };
 }
 
-export default connect(mapStateToProps, { fetchCartItems })(withStyles(styles)(Navbar))
+export default connect(mapStateToProps, { fetchCartItems, getUser })(withStyles(styles)(Navbar))

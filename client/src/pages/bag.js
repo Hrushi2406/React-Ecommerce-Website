@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Card, CardContent, Icon, Typography, withStyles, Divider, Button, Slide, Snackbar, SnackbarContent } from '@material-ui/core'
+import { Grid, Card, CardContent, Icon, Typography, withStyles, Divider, Button, Slide, Snackbar, SnackbarContent, CircularProgress } from '@material-ui/core'
 import { connect } from 'react-redux'
 import Product from "../components/product";
 import BagItem from '../components/bagItem';
@@ -7,6 +7,9 @@ import { Link } from 'react-router-dom';
 import { clearBag } from '../redux/actions/cartAction'
 import { clearErrors, clearSuccessMessage } from '../redux/actions/uiAction'
 import { TransitionUp } from '../utils/functions'
+import { mapProductsToUser } from '../redux/actions/checkoutAction'
+
+import { getTotalPrice, getTotalDiscountPrice, getYouPay } from '../utils/functions'
 
 const styles = theme => ({
     center: theme.props.center,
@@ -53,11 +56,12 @@ class bag extends Component {
         this.props.clearSuccessMessage();
     }
 
+    openCheckout = () => {
+        this.props.mapProductsToUser(this.props.history)
+    }
+
     render() {
-        const { cartItems, classes, ui: { errors, success } } = this.props
-        const getTotalPrice = () => cartItems.map((item) => item.count * (item.price)).reduce((prev, curr) => curr + prev, 0)
-        const getTotalDiscountPrice = () => cartItems.map((item) => item.count * (item.price - item.discounted_price)).reduce((prev, curr) => curr + prev, 0)
-        const getYouPay = () => cartItems.map((item) => item.count * (item.discounted_price)).reduce((prev, curr) => curr + prev, 0)
+        const { cartItems, classes, ui: { errors, success, loading } } = this.props
 
         if (cartItems.length == 0) return <div>
             <div className={classes.container}>
@@ -100,7 +104,7 @@ class bag extends Component {
                 <Grid container spacing={2}>
 
                     <Grid item sm={8} xs={12} >
-                        {cartItems.map(item => <BagItem item={item} key={item.id} />)}
+                        {cartItems.map(item => <BagItem item={item} key={item.productId} />)}
                     </Grid>
 
                     <Grid item sm={4} xs={12}>
@@ -110,16 +114,16 @@ class bag extends Component {
                                 <Divider />
                                 <div className={classes.details}>
                                     <Typography gutterBottom variant='body1' >Price ({cartItems.length} items)</Typography>
-                                    <Typography gutterBottom variant='body1' >Rs. {getTotalPrice()} </Typography>
+                                    <Typography gutterBottom variant='body1' >Rs. {getTotalPrice(cartItems)} </Typography>
                                 </div>
                                 <div className={classes.details}>
                                     <Typography gutterBottom variant='body1' >Item Discount</Typography>
-                                    <Typography gutterBottom variant='body1' > - Rs. {getTotalDiscountPrice()} </Typography>
+                                    <Typography gutterBottom variant='body1' > - Rs. {getTotalDiscountPrice(cartItems)} </Typography>
                                 </div>
                                 <Divider />
                                 <div className={classes.details}>
                                     <Typography gutterBottom variant='h4' className={classes.headerTitle}  >You Pay </Typography>
-                                    <Typography gutterBottom variant='h4' className={classes.headerTitle} >Rs. {getYouPay()}</Typography>
+                                    <Typography gutterBottom variant='h4' className={classes.headerTitle} >Rs. {getYouPay(cartItems)}</Typography>
                                 </div>
                             </CardContent>
                         </Card>
@@ -128,11 +132,11 @@ class bag extends Component {
                             fullWidth
                             disableElevation
                             variant='contained'
-                            component={Link}
-                            to='/checkout'
-                            endIcon={<Icon>arrow_forward</Icon>}
-                        >Proceed To Checkout
-                          </Button>
+                            onClick={this.openCheckout}
+                            endIcon={loading ? false : <Icon>arrow_forward</Icon>}
+                        >
+                            {loading ? <CircularProgress color='inherit' /> : "Proceed To Checkout"}
+                        </Button>
                     </Grid>
                 </Grid >
 
@@ -147,5 +151,5 @@ const mapStateToProps = state => {
     return { cartItems: state.cart.arrOfCartItems, ui: state.ui };
 }
 
-export default connect(mapStateToProps, { clearBag, clearErrors, clearSuccessMessage })(withStyles(styles)(bag))
+export default connect(mapStateToProps, { clearBag, clearErrors, clearSuccessMessage, mapProductsToUser })(withStyles(styles)(bag))
 

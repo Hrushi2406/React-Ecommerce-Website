@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, NavLink, Switch } from 'react-router-dom'
+import jwtDecode from 'jwt-decode'
 
 import { Container } from "@material-ui/core";
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
@@ -7,7 +8,7 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
 
 
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
+import api from './redux/actions/apiCreate';
 
 
 //Pages
@@ -20,6 +21,7 @@ import Navbar from './components/navbar'
 import overview from './pages/overview';
 import store from './redux/store';
 import checkout from './pages/checkout';
+import { SET_AUTHENTICATED, SET_UNAUTHENTICATED } from './redux/types';
 
 // let colorPallete = {
 //   "#f5feff",
@@ -100,6 +102,14 @@ const theme = createMuiTheme({
     }
   }
 })
+
+let token = localStorage.authToken
+if (token) {
+  api.defaults.headers.common['Authorization'] = token
+  store.dispatch({ type: SET_AUTHENTICATED })
+} else {
+  store.dispatch({ type: SET_UNAUTHENTICATED })
+}
 
 export class App extends Component {
 

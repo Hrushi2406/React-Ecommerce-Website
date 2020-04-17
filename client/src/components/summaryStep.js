@@ -4,9 +4,9 @@ import CheckoutItem from './checkoutItem';
 import { storeProducts } from '../data';
 
 
-export const SummaryStep = () => {
+const SummaryStep = ({ checkoutProducts }) => {
     var cartItems = []
-    cartItems = storeProducts
+    cartItems = checkoutProducts
     return (
         <div>
             {cartItems.map(item => <CheckoutItem item={item} key={item.productId} />)}
@@ -15,10 +15,10 @@ export const SummaryStep = () => {
     )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => {
+    return { checkoutProducts: state.checkout.products }
+}
 
-})
 
-
-export default connect(null)(SummaryStep)
+export default connect(mapStateToProps)(SummaryStep)
 

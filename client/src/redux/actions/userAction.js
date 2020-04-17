@@ -46,5 +46,20 @@ export const signUpUser = (userData, history) => async (dispatch) => {
             payload: err.response.data
         })
     }
-
 }
+
+export const getUser = () => async dispatch => {
+    try {
+        let response = await api.get('/userDetails')
+        dispatch({
+            type: SET_USER,
+            payload: response.data.userData
+        })
+        console.log(response.data.userData)
+    } catch (err) {
+        dispatch({
+            type: SET_ERRORS,
+            payload: err.response.data
+        })
+    }
+} 

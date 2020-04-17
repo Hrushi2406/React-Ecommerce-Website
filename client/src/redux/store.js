@@ -6,6 +6,8 @@ import userReducer from './reducers/userReducer'
 import productReducer from './reducers/productReducer'
 import uiReducer from './reducers/uiReducer'
 import cartReducer from './reducers/cartReducer'
+import checkoutReducer from './reducers/checkoutReducer'
+
 
 
 
@@ -19,7 +21,8 @@ const reducers = combineReducers({
     user: userReducer,
     products: productReducer,
     ui: uiReducer,
-    cart: cartReducer
+    cart: cartReducer,
+    checkout: checkoutReducer
 })
 
 const store = createStore(

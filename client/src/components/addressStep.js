@@ -2,10 +2,21 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Typography, withStyles, Button, Icon, Divider, TextField } from '@material-ui/core'
 
+import { saveAddress, deleteAddress } from '../redux/actions/checkoutAction'
 
 const styles = theme => ({
     title: {
         fontSize: '1.15rem'
+    },
+    center: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: "rgba(0,0,0,0.03)",
+        borderRadius: 10,
+        height: 300,
+        marginBottom: 15
     },
     container: {
         display: 'flex',
@@ -32,16 +43,28 @@ const styles = theme => ({
 
 class addressStep extends Component {
     state = {
-        selectedAddress: 0,
         showForm: false,
         addressLine1: '',
         addressLine2: '',
         city: '',
         state: '',
         country: '',
-        pincode: null
+        pincode: '',
+        errors: {},
     }
-    setSelectedAddress = (i) => this.setState({ selectedAddress: i })
+    setSelectedAddress = (i) => this.props.onDefaultAddressChange(i)
+
+    componentDidMount() {
+        this.setState({
+            selectedAddress: this.props.selectedAddress
+        })
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            selectedAddress: this.props.selectedAddress
+        })
+    }
 
     handleChange = (e) => {
         this.setState({
@@ -49,13 +72,24 @@ class addressStep extends Component {
         })
     }
 
+    saveAddress = () => {
+        const { addressLine1, addressLine2, city, state, country, pincode } = this.state
+        let userAdrress = addressLine1 + " " + addressLine2 + " " + city + " " + state + " " + country + " " + pincode
+        console.log(userAdrress)
+        this.props.saveAddress(userAdrress)
+    }
+
+    deleteAddress = () => {
+        this.props.deleteAddress(this.props.selectedAddress)
+    }
+
     showForm = () => this.setState({ showForm: true })
     hideForm = () => this.setState({ showForm: false })
 
     render() {
-        const { classes, ui: { errors } } = this.props
-        const { selectedAddress, showForm } = this.state
-        var address = [" Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima laudantium nam sapiente enim quae in ullam vitae voluptatibus, sit dolore unde illo veniam maiores? Fugiat cum nostrum vitae delectus obcaecati?", " Lorem ipsum, dolor sit amet consectetur adipisicing elit. Minima laudantium nam sapiente enim quae in ullam vitae voluptatibus, sit dolore unde illo veniam maiores? Fugiat cum nostrum vitae delectus obcaecati?"]
+        const { classes, userData: { addressList }, ui, selectedAddress } = this.props
+        const { showForm, errors } = this.state
+
         return (
             <React.Fragment >
                 <div className={classes.container}>
@@ -68,21 +102,29 @@ class addressStep extends Component {
                     </Button>
                 </div>
                 <Divider className={classes.divider} />
-                <div>
-                    <Typography variant='body1' className={classes.subtitle} >Select from saved Address </Typography>
-                    {
-                        address.map((add, i) => {
-                            return <div key={i} className="summaryHeader" onClick={() => this.setSelectedAddress(i)} style={selectedAddress === i ? { transition: '0.2s', background: '#bbbbbb', color: '#fff' } : {}}>
-                                <Typography>{add}</Typography>
+                {
+                    addressList === null ? <div className={classes.center}>
+                        <Typography variant='h4' gutterBottom color='primary' className={classes.title} >You don't have any saved address</Typography>
+                        <Typography variant='body2' color='secondary'  >Click Add address to add one</Typography>
+                    </div>
+                        : <div >
+                            <div className={classes.container}>
+                                <Typography variant='body1' className={classes.subtitle} >Select from saved Address </Typography>
+                                <Button size='small' color='secondary' onClick={this.deleteAddress} className={classes.subtitle} >Delete selected address</Button>
                             </div>
-                        })
-                    }
-                </div>
 
-
+                            {
+                                addressList.map((add, i) => {
+                                    return <div key={i} className="summaryHeader" onClick={() => this.setSelectedAddress(i)} style={selectedAddress === i ? { transition: '0.2s', background: '#bbbbbb', color: '#fff' } : {}}>
+                                        <Typography>{add}</Typography>
+                                    </div>
+                                })
+                            }
+                        </div>
+                }
 
                 {showForm ?
-                    <div>
+                    <div >
                         <Typography variant='body1' className={classes.subtitle} >Add address </Typography>
                         <TextField
                             id="standard-basic-1"
@@ -91,8 +133,8 @@ class addressStep extends Component {
                             margin="dense"
                             name="addressLine1"
                             type='text'
-                            helperText={errors}
-                            error={errors ? true : false}
+                            helperText={errors.addressLine1}
+                            error={errors.addressLine1 ? true : false}
                             value={this.state.addressLine1}
                             onChange={this.handleChange}
                             className={classes.textField}
@@ -104,8 +146,8 @@ class addressStep extends Component {
                             margin="dense"
                             name="addressLine2"
                             type='text'
-                            helperText={errors}
-                            error={errors ? true : false}
+                            helperText={errors.addressLine2}
+                            error={errors.addressLine2 ? true : false}
                             value={this.state.addressLine2}
                             onChange={this.handleChange}
                             className={classes.textField}
@@ -118,8 +160,8 @@ class addressStep extends Component {
                                 margin="dense"
                                 name="pincode"
                                 type='number'
-                                helperText={errors}
-                                error={errors ? true : false}
+                                helperText={errors.pincode}
+                                error={errors.pincode ? true : false}
                                 value={this.state.pincode}
                                 onChange={this.handleChange}
                                 className={classes.textField}
@@ -131,8 +173,8 @@ class addressStep extends Component {
                                 margin="dense"
                                 name="city"
                                 type='text'
-                                helperText={errors}
-                                error={errors ? true : false}
+                                helperText={errors.city}
+                                error={errors.city ? true : false}
                                 value={this.state.city}
                                 onChange={this.handleChange}
                                 className={classes.textField}
@@ -146,8 +188,8 @@ class addressStep extends Component {
                                 margin="dense"
                                 name="state"
                                 type='text'
-                                helperText={errors}
-                                error={errors ? true : false}
+                                helperText={errors.state}
+                                error={errors.state ? true : false}
                                 value={this.state.state}
                                 onChange={this.handleChange}
                                 className={classes.textField}
@@ -159,8 +201,9 @@ class addressStep extends Component {
                                 margin="dense"
                                 name="country"
                                 type='text'
-                                helperText={errors}
-                                error={errors ? true : false}
+                                required={true}
+                                helperText={errors.country}
+                                error={errors.country ? true : false}
                                 value={this.state.country}
                                 onChange={this.handleChange}
                                 className={classes.textField}
@@ -176,6 +219,7 @@ class addressStep extends Component {
                                 color='primary'
                                 variant='outlined'
                                 disableElevation
+                                onClick={this.saveAddress}
                                 fullWidth >
                                 Save Address</Button>
                         </div>
@@ -189,11 +233,7 @@ class addressStep extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return { ui: state.ui }
+    return { checkoutProducts: state.checkout.products, userData: state.user.userData, ui: state.ui }
 }
 
-const mapDispatchToProps = {
-
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(addressStep))
+export default connect(mapStateToProps, { saveAddress, deleteAddress })(withStyles(styles)(addressStep))
