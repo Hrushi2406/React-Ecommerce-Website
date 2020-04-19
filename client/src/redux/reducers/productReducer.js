@@ -18,7 +18,7 @@ const initalState = {
             category1: "",
             category3: "",
             sortBy: "",
-            page: -1,
+            page: 0,
             sortOrder: 'asc',
             categories: {
                 category1: [],
