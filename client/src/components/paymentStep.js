@@ -31,7 +31,7 @@ const PaymentStep = ({ classes, selectedPaymentMethod, setPaymentMethod }) => {
             <div>
                 <div className="summaryHeader" >
                     <RadioGroup aria-label="paymentMehtod" name="paymentMethod" value={selectedPaymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-                        <FormControlLabel value="razorpay" control={<Radio />} label="Pay with Razorpay" />
+                        <FormControlLabel value="razorpay" control={<Radio />} label="Pay with Card or UPI" />
                         <FormControlLabel value="cod" control={<Radio />} label="Cash on Delivery" />
                     </RadioGroup>
                 </div>

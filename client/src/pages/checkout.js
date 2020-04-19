@@ -82,7 +82,6 @@ export class checkout extends Component {
         this.setState({
             selectedAddress: this.props.userData.defaultAddress
         })
-        console.log(nextProps)
         if (nextProps.orderPlacedMessage) {
             this.handleNext()
             console.log('Recived Message')
@@ -125,7 +124,7 @@ export class checkout extends Component {
         const { classes, checkoutProducts, orderPlacedMessage, userData: { defaultAddress, addressList }, ui: { loading, errors, success } } = this.props
         const { activeStep, selectedPaymentMethod } = this.state
         const steps = getSteps()
-        console.log(this.state.activeStep)
+
         return (
             < React.Fragment >
                 <Stepper activeStep={activeStep} className="stepper" style={{ backgroundColor: "rgba(0, 0, 0, 0.03)", }} alternativeLabel>
@@ -154,7 +153,7 @@ export class checkout extends Component {
                                         <div className={classes.center}>
 
                                             <Typography variant='h4' className={classes.headerTitle}> {orderPlacedMessage}</Typography>
-                                            <Button component={Link} to='/viewOrders' color='secondary' >View your Orders</Button>
+                                            {/* <Button component={Link} to='/viewOrders' color='secondary' >View your Orders</Button> */}
                                         </div>
                                     </div>
                                 ) : (

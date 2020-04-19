@@ -101,7 +101,6 @@ export class SortDialog extends Component {
                             <FormControlLabel value="price" control={<Radio />} label="Price" />
                             <FormControlLabel value="discounted_price" control={<Radio />} label="Discounted Price" />
                             <FormControlLabel value="discount" control={<Radio />} label="Discount Percent" />
-
                         </RadioGroup>
 
                         <Typography variant='h6' gutterBottom id="alert-dialog-slide-title"

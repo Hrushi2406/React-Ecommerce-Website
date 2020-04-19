@@ -7,7 +7,9 @@ import { connect } from 'react-redux';
 import { addToCart } from '../redux/actions/cartAction'
 import { clearErrors, clearSuccessMessage } from '../redux/actions/uiAction'
 import { TransitionUp, capitalize, lowerCase } from '../utils/functions'
-import { mapProductsToUser } from '../redux/actions/checkoutAction'
+
+import { AskQuantity } from '../components/askQuantity';
+
 const styles = theme => ({
     card: {
         margin: 10,
@@ -60,15 +62,24 @@ const styles = theme => ({
 
 
 export class product extends Component {
+
+    state = {
+        open: false,
+    }
+
     handleClose = () => {
         this.props.clearErrors();
         console.log('fired')
     }
 
-    buyNow = (product) => {
-        product.count = 1
-        this.props.mapProductsToUser(this.props.history, [product])
+    buyNow = () => {
+        this.setState({ open: true })
+        // product.count = 1
+        // this.props.mapProductsToUser(this.props.history, [product])
     }
+
+    handleDialogClose = () => this.setState({ open: false })
+
 
     render() {
 
@@ -108,11 +119,12 @@ export class product extends Component {
 
                             !inStock ? <Typography gutterBottom variant='body2' className={classes.stock} color='secondary' >Currently out of stock</Typography>
                                 : <React.Fragment >
+                                    <AskQuantity handleClose={this.handleDialogClose} product={this.props.product} history={history} open={this.state.open} />
                                     <Button
                                         size="small"
                                         disableElevation
                                         color="secondary"
-                                        onClick={() => this.buyNow(this.props.product)}
+                                        onClick={this.buyNow}
                                         disabled={!inStock}
                                         className={classes.end} >
                                         Buy Now
@@ -137,9 +149,8 @@ export class product extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state)
     return { ui: state.ui };
 }
 
 
-export default connect(mapStateToProps, { addToCart, clearErrors, clearSuccessMessage, mapProductsToUser })(withStyles(styles)(product))
+export default connect(mapStateToProps, { addToCart, clearErrors, clearSuccessMessage })(withStyles(styles)(product))

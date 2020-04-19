@@ -26,7 +26,6 @@ export class Navbar extends Component {
         this.props.fetchCartItems();
         if (localStorage.authToken) {
             this.props.getUser();
-
         }
     }
     render() {
@@ -48,6 +47,7 @@ export class Navbar extends Component {
                     </Toolbar>
                 </Container>
             </AppBar>
+
         )
     }
 }

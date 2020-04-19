@@ -39,6 +39,9 @@ export const removeFromCart = product => dispatch => {
 
 export const fetchCartItems = () => async dispatch => {
     let arrOfCartItems = getIds()
+    if (arrOfCartItems === null) {
+        arrOfCartItems = []
+    }
     dispatch({ type: SET_CART_PRODUCTS, payload: arrOfCartItems })
 }
 

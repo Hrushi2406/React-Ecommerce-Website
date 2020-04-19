@@ -37,13 +37,11 @@ export const fetchProducts = () => async dispatch => {
     try {
         dispatch({ type: LOADING_UI })
         let response = await api.get('/checkoutProducts')
-        console.log(response.data)
         dispatch({ type: CLEAR_ERRORS })
         dispatch({
             type: FETCH_PRODUCTS,
             payload: response.data.productsList
         })
-        console.log("CALLED")
     }
     catch (err) {
         console.log(err)
