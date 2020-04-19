@@ -37,15 +37,14 @@ export class categoryView extends Component {
     }
 
     componentDidMount() {
-        this.props.viewAll(this.props.match.params.key, 0)
-
+        // this.props.viewAll(this.props.match.params.key, 0)
     }
 
     loadMore = (page) => {
-        page = page + 1
+
+        page = this.props.products.paginateInfo.page + 1
         const { sortBy, sortOrder, category1, category3 } = this.props.products.paginateInfo
         this.props.viewAll(this.props.match.params.key, page, sortBy, sortOrder, category1, category3)
-
     }
 
 
@@ -57,7 +56,7 @@ export class categoryView extends Component {
 
             <InfiniteScroller
                 pageStart={-1}
-                initialLoad={false}
+                initialLoad={true}
                 loadMore={this.loadMore}
                 hasMore={hasMore}
                 loader={<div key={0} className={classes.center}> <CircularProgress /> </div>}
@@ -73,7 +72,7 @@ export class categoryView extends Component {
                     <Grid container>
                         {categoryData.map(product =>
                             <Grid item key={product.productId} sm={3} xs={12} >
-                                <Product product={product} />
+                                <Product product={product} history={this.props.history} />
                             </Grid>
                         )}
                     </Grid>

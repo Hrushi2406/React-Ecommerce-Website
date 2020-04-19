@@ -7,7 +7,7 @@ import { fetchProduct } from '../redux/actions/productAction'
 import { addToCart } from '../redux/actions/cartAction'
 import { capitalize, lowerCase, TransitionUp } from '../utils/functions'
 import { clearErrors, clearSuccessMessage } from '../redux/actions/uiAction'
-
+import { mapProductsToUser } from '../redux/actions/checkoutAction'
 
 const styles = theme => ({
 
@@ -96,6 +96,7 @@ class overview extends Component {
         this.props.clearSuccessMessage();
     }
 
+
     setActiveImage = (i) => {
         this.setState({
             imgIndex: i
@@ -106,10 +107,16 @@ class overview extends Component {
         this.props.addToCart(this.props.location.data ? this.props.location.data : this.props.product)
     }
 
+    buyNow = () => {
+        let product = this.props.location.data ? this.props.location.data : this.props.product
+        product.count = 1
+        this.props.mapProductsToUser(this.props.history, [product])
+    }
+
     render() {
         const { classes, ui: { loading, errors, success } } = this.props;
-        const { title, description, category1, category2, category3, price, discounted_price, discount, stock, inStock, product_images, labels, values } = this.props.location.data ? this.props.location.data : this.props.product
-
+        const { title, description, category1, category2, category3, price, discounted_price, discount, stock, product_images, labels, values } = this.props.location.data ? this.props.location.data : this.props.product
+        const inStock = stock !== 0
         if (loading) return <div className={classes.center} ><CircularProgress /></div>
         return (
             <div>
@@ -159,7 +166,7 @@ class overview extends Component {
                         </div>
 
                         <div className={classes.spaced}>
-                            <Button fullWidth variant='contained' disabled={!inStock} color='primary' disableElevation> Buy Now</Button>
+                            <Button fullWidth variant='contained' disabled={!inStock} onClick={this.buyNow} color='primary' disableElevation> Buy Now</Button>
                             <Button fullWidth color="secondary" disabled={!inStock} onClick={this.addToCart} startIcon={<Icon>local_mall_rounded_icon</Icon>} > Add to Bag</Button>
                         </div>
                         <div >
@@ -192,4 +199,4 @@ const mapStateToProps = state => {
     return { ui: state.ui, product: state.products.currentOverview };
 }
 
-export default connect(mapStateToProps, { fetchProduct, addToCart, clearErrors, clearSuccessMessage })(withStyles(styles)(overview))
+export default connect(mapStateToProps, { fetchProduct, addToCart, clearErrors, clearSuccessMessage, mapProductsToUser })(withStyles(styles)(overview))

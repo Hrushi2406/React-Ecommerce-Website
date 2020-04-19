@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Stepper, Step, StepLabel, withStyles, Typography, Button, Paper, useTheme, useMediaQuery, Grid, Divider, Icon, CircularProgress, Snackbar, SnackbarContent } from '@material-ui/core'
 
-import BagItem from '../components/bagItem'
 import { Link } from 'react-router-dom';
 import SummaryStep from "../components/summaryStep";
 import AddressStep from "../components/addressStep"
@@ -11,7 +10,7 @@ import { fetchProducts } from '../redux/actions/checkoutAction'
 
 import { getTotalPrice, getTotalDiscountPrice, getYouPay, TransitionUp } from '../utils/functions'
 import { clearErrors } from '../redux/actions/uiAction'
-import { updateDefaultAddress } from '../redux/actions/checkoutAction'
+import { updateDefaultAddress, payWithRazorpay, placeOrder } from '../redux/actions/checkoutAction'
 
 const styles = theme => ({
     center: {
@@ -23,6 +22,7 @@ const styles = theme => ({
     },
     headerTitle: {
         fontSize: '1.15rem',
+        textAlign: 'center'
     },
     container: {
         display: 'flex',
@@ -82,13 +82,22 @@ export class checkout extends Component {
         this.setState({
             selectedAddress: this.props.userData.defaultAddress
         })
+        console.log(nextProps)
+        if (nextProps.orderPlacedMessage) {
+            this.handleNext()
+            console.log('Recived Message')
+        }
     }
     updateDefaultAddress = () => {
         this.props.updateDefaultAddress(this.state.selectedAddress)
         this.handleNext()
     }
     placeOrder = () => {
-
+        if (this.state.selectedPaymentMethod === 'razorpay') {
+            this.props.payWithRazorpay()
+        } else {
+            this.props.placeOrder(this.state.selectedPaymentMethod)
+        }
     }
 
     handleClose = () => {
@@ -113,10 +122,10 @@ export class checkout extends Component {
 
 
     render() {
-        const { classes, checkoutProducts, userData: { defaultAddress, addressList }, ui: { loading, errors, success } } = this.props
+        const { classes, checkoutProducts, orderPlacedMessage, userData: { defaultAddress, addressList }, ui: { loading, errors, success } } = this.props
         const { activeStep, selectedPaymentMethod } = this.state
         const steps = getSteps()
-
+        console.log(this.state.activeStep)
         return (
             < React.Fragment >
                 <Stepper activeStep={activeStep} className="stepper" style={{ backgroundColor: "rgba(0, 0, 0, 0.03)", }} alternativeLabel>
@@ -132,104 +141,111 @@ export class checkout extends Component {
                 <div className='contentDiv' style={{ transition: '0.5s' }} >
                     {
                         loading ? <div className={classes.center}><CircularProgress /> </div> :
-
-                            activeStep === steps.length ? (
+                            checkoutProducts.length === 0 ?
                                 <div>
                                     <div className={classes.center}>
-                                        <Typography variant='h4' className={classes.headerTitle}> You Order has been placed Succesfully</Typography>
-                                        <Button component={Link} to='/viewOrders' color='secondary' >View your Orders</Button>
+                                        <Typography variant='h4' className={classes.headerTitle}> {errors}</Typography>
+                                        <Button component={Link} to='/' color='secondary' >Back to shop</Button>
                                     </div>
                                 </div>
-                            ) : (
-                                    <div className='contentDiv' style={{ padding: 0, marginTop: 0, background: 'transparent', boxShadow: 'none' }}>
-                                        {/* SUMMARY */}
-                                        {
-                                            activeStep !== 1 ? <React.Fragment>
-                                                <div className={classes.container}>
-                                                    <Typography variant='h4' color='primary' className={classes.title} >Summary</Typography>
-                                                    <Button
-                                                        component={Link}
-                                                        to='/bag'
-                                                        color='secondary'
-                                                        size='small'>
-                                                        Edit Bag
-                                                      </Button>
-                                                </div>
-                                                <Divider className={classes.divider2} />
-                                                <div>
-                                                    <div className="summaryHeader">
-                                                        <div className={classes.container}>
-                                                            <Typography gutterBottom variant='body2'>Total Price ({checkoutProducts.length} items)</Typography>
-                                                            <Typography variant='body2' >Rs. {getTotalPrice(checkoutProducts)}</Typography>
-                                                        </div>
-                                                        <div className={classes.container}>
-                                                            <Typography gutterBottom variant='body2'>Item Discount ({checkoutProducts.length} items)</Typography>
-                                                            <Typography variant='body2'> - Rs. {getTotalDiscountPrice(checkoutProducts)}</Typography>
-                                                        </div>
-                                                        <Divider className={classes.divider} />
-                                                        <div className={classes.container}>
-                                                            <Typography color='primary' variant='h4' className={classes.headerTitle} >You Pay</Typography>
-                                                            <Typography color='primary' variant='h4' className={classes.headerTitle} > Rs. {getYouPay(checkoutProducts)}</Typography>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </React.Fragment>
-                                                : <React.Fragment></React.Fragment>
-                                        }
-                                        {/* Address */}
-                                        {
-                                            activeStep === 2 ? <React.Fragment>
-                                                <div className={classes.container}>
-                                                    <Typography variant='h4' color='primary' className={classes.title} >Selected Address for Delivery</Typography>
-                                                    <Button
-                                                        color='secondary'
-                                                        onClick={this.handleBack}
-                                                        size='small'>
-                                                        Change address
-                                         </Button>
-                                                </div>
-                                                <Divider className={classes.divider2} />
-                                                <div>
-                                                    <div className="summaryHeader" >
-                                                        <Typography>{addressList[defaultAddress]}</Typography>
-                                                    </div>
-                                                </div>
-                                            </React.Fragment>
-                                                : <React.Fragment></React.Fragment>
-                                        }
+                                :
+                                activeStep === steps.length ? (
+                                    <div>
+                                        <div className={classes.center}>
 
-                                        <Snackbar
-                                            open={errors !== null || success !== null}
-                                            autoHideDuration={1200}
-                                            onClose={this.handleClose}
-                                            TransitionComponent={TransitionUp}
-                                            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-                                            <SnackbarContent elevation={0} className={classes.snackbar} message={errors !== null ? errors : success} />
-                                        </Snackbar>
-
-                                        {this.getStepContent(activeStep)}
-                                        <div className={classes.buttonDiv}>
-                                            <Button
-                                                disabled={activeStep === 0}
-                                                onClick={this.handleBack}
-                                                className={classes.backButton}
-                                                fullWidth >
-                                                Back
-                                        </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                disabled={activeStep === 1 ? defaultAddress === null ? true : false : false}
-                                                onClick={activeStep === 1 ? this.updateDefaultAddress : activeStep === 2 ? this.placeOrder : this.handleNext}
-                                                disabled={activeStep === steps.length - 1 ? selectedPaymentMethod === null : false}
-                                                disableElevation
-                                                fullWidth >
-                                                {activeStep === steps.length - 1 ? selectedPaymentMethod === 'paypal' ? 'Pay and Place order' : 'Place order' : 'Next'}
-                                            </Button>
+                                            <Typography variant='h4' className={classes.headerTitle}> {orderPlacedMessage}</Typography>
+                                            <Button component={Link} to='/viewOrders' color='secondary' >View your Orders</Button>
                                         </div>
                                     </div>
+                                ) : (
+                                        <div className='contentDiv' style={{ padding: 0, marginTop: 0, background: 'transparent', boxShadow: 'none' }}>
+                                            {/* SUMMARY */}
+                                            {
+                                                activeStep !== 1 ? <React.Fragment>
+                                                    <div className={classes.container}>
+                                                        <Typography variant='h4' color='primary' className={classes.title} >Summary</Typography>
+                                                        <Button
+                                                            component={Link}
+                                                            to='/bag'
+                                                            color='secondary'
+                                                            size='small'>
+                                                            Edit Bag
+                                                      </Button>
+                                                    </div>
+                                                    <Divider className={classes.divider2} />
+                                                    <div>
+                                                        <div className="summaryHeader">
+                                                            <div className={classes.container}>
+                                                                <Typography gutterBottom variant='body2'>Total Price ({checkoutProducts.length} items)</Typography>
+                                                                <Typography variant='body2' >Rs. {getTotalPrice(checkoutProducts)}</Typography>
+                                                            </div>
+                                                            <div className={classes.container}>
+                                                                <Typography gutterBottom variant='body2'>Item Discount ({checkoutProducts.length} items)</Typography>
+                                                                <Typography variant='body2'> - Rs. {getTotalDiscountPrice(checkoutProducts)}</Typography>
+                                                            </div>
+                                                            <Divider className={classes.divider} />
+                                                            <div className={classes.container}>
+                                                                <Typography color='primary' variant='h4' className={classes.headerTitle} >You Pay</Typography>
+                                                                <Typography color='primary' variant='h4' className={classes.headerTitle} > Rs. {getYouPay(checkoutProducts)}</Typography>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </React.Fragment>
+                                                    : <React.Fragment></React.Fragment>
+                                            }
+                                            {/* Address */}
+                                            {
+                                                activeStep === 2 ? <React.Fragment>
+                                                    <div className={classes.container}>
+                                                        <Typography variant='h4' color='primary' className={classes.title} >Selected Address for Delivery</Typography>
+                                                        <Button
+                                                            color='secondary'
+                                                            onClick={this.handleBack}
+                                                            size='small'>
+                                                            Change address
+                                         </Button>
+                                                    </div>
+                                                    <Divider className={classes.divider2} />
+                                                    <div>
+                                                        <div className="summaryHeader" >
+                                                            <Typography>{addressList[defaultAddress]}</Typography>
+                                                        </div>
+                                                    </div>
+                                                </React.Fragment>
+                                                    : <React.Fragment></React.Fragment>
+                                            }
 
-                                )
+                                            <Snackbar
+                                                open={errors !== null || success !== null}
+                                                autoHideDuration={1200}
+                                                onClose={this.handleClose}
+                                                TransitionComponent={TransitionUp}
+                                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+                                                <SnackbarContent elevation={0} className={classes.snackbar} message={errors !== null ? errors : success} />
+                                            </Snackbar>
+
+                                            {this.getStepContent(activeStep)}
+                                            <div className={classes.buttonDiv}>
+                                                <Button
+                                                    disabled={activeStep === 0}
+                                                    onClick={this.handleBack}
+                                                    className={classes.backButton}
+                                                    fullWidth >
+                                                    Back
+                                        </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    disabled={activeStep === 1 ? defaultAddress === null ? true : false : activeStep === steps.length - 1 ? selectedPaymentMethod === null : false}
+                                                    onClick={activeStep === 1 ? this.updateDefaultAddress : activeStep === 2 ? this.placeOrder : this.handleNext}
+                                                    disableElevation
+                                                    fullWidth >
+                                                    {activeStep === steps.length - 1 ? selectedPaymentMethod === 'razorpay' ? 'Pay and Place order' : 'Place order' : 'Next'}
+                                                </Button>
+                                            </div>
+                                        </div>
+
+                                    )
                     }
                 </div>
 
@@ -239,8 +255,8 @@ export class checkout extends Component {
 }
 
 const mapStateToProps = state => {
-    return { userData: state.user.userData, checkoutProducts: state.checkout.products, ui: state.ui };
+    return { userData: state.user.userData, checkoutProducts: state.checkout.products, orderPlacedMessage: state.checkout.orderPlacedMessage, ui: state.ui };
 }
 
 
-export default connect(mapStateToProps, { fetchProducts, clearErrors, updateDefaultAddress })(withStyles(styles)(checkout))
+export default connect(mapStateToProps, { fetchProducts, clearErrors, updateDefaultAddress, payWithRazorpay, placeOrder })(withStyles(styles)(checkout))

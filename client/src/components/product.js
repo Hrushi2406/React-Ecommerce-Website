@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { addToCart } from '../redux/actions/cartAction'
 import { clearErrors, clearSuccessMessage } from '../redux/actions/uiAction'
 import { TransitionUp, capitalize, lowerCase } from '../utils/functions'
-
+import { mapProductsToUser } from '../redux/actions/checkoutAction'
 const styles = theme => ({
     card: {
         margin: 10,
@@ -64,9 +64,16 @@ export class product extends Component {
         this.props.clearErrors();
         console.log('fired')
     }
+
+    buyNow = (product) => {
+        product.count = 1
+        this.props.mapProductsToUser(this.props.history, [product])
+    }
+
     render() {
 
-        const { classes, product: { productId, title, inStock, category2, category3, product_images, price, discount, discounted_price }, ui: { errors, success } } = this.props;
+        const { classes, history, product: { productId, title, stock, category2, category3, product_images, price, discount, discounted_price }, ui: { errors, success } } = this.props;
+        const inStock = stock !== 0
         return (
             <div>
                 <Snackbar
@@ -102,10 +109,10 @@ export class product extends Component {
                             !inStock ? <Typography gutterBottom variant='body2' className={classes.stock} color='secondary' >Currently out of stock</Typography>
                                 : <React.Fragment >
                                     <Button
-                                        onClick={() => console.log('hi')}
                                         size="small"
                                         disableElevation
                                         color="secondary"
+                                        onClick={() => this.buyNow(this.props.product)}
                                         disabled={!inStock}
                                         className={classes.end} >
                                         Buy Now
@@ -135,4 +142,4 @@ const mapStateToProps = state => {
 }
 
 
-export default connect(mapStateToProps, { addToCart, clearErrors, clearSuccessMessage })(withStyles(styles)(product))
+export default connect(mapStateToProps, { addToCart, clearErrors, clearSuccessMessage, mapProductsToUser })(withStyles(styles)(product))

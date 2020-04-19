@@ -45,9 +45,10 @@ const theme = createMuiTheme({
       root: {
         borderRadius: 10
       }
-    }
+    },
   },
   typography: {
+
     button: {
       borderRadius: 10,
       textTransform: 'none',
@@ -82,6 +83,7 @@ const theme = createMuiTheme({
     button1: {
       marginTop: 20,
     },
+    linkButton: { textAlign: 'center', margin: "20px auto", display: 'block', textDecoration: 'none' },
     container: {
       display: 'flex',
       flexDirection: 'column',

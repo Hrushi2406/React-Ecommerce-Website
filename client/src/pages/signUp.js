@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { TextField, withStyles, Button, Typography, CircularProgress } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { signUpUser } from "../redux/actions/userAction";
+import { Link } from 'react-router-dom';
 
 // import DateFnsUtils from '@date-io/date-fns';
 
@@ -9,6 +10,8 @@ const styles = (theme) => ({
     container: theme.props.container,
     textField: theme.props.textField,
     button: theme.props.button1,
+    linkButton: theme.props.linkButton
+
 })
 
 export class signUp extends Component {
@@ -152,6 +155,7 @@ export class signUp extends Component {
                             fullWidth >
                             {loading ? <CircularProgress color='inherit' /> : "Sign Up"}
                         </Button>
+                        <Typography color='secondary' to='/login' component={Link} className={classes.linkButton} >Have an account? Login</Typography>
 
                     </form>
 

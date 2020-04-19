@@ -65,7 +65,7 @@ class home extends Component {
                                 <Grid container>
                                     {products[key].map(product =>
                                         <Grid item key={product.productId} sm={3} xs={12} >
-                                            <Product product={product} />
+                                            <Product product={product} history={this.props.history} />
                                         </Grid>
                                     )}
                                 </Grid>
