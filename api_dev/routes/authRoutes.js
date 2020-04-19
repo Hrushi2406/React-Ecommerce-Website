@@ -49,8 +49,11 @@ exports.signUp = async (req, res) => {
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
         dob: req.body.dob,
-        mobile: req.body.mobile
+        mobile: parseInt(req.body.mobile),
+        addressList: null,
+        defaultAddress: null,
     }
+    console.log(user.mobile)
     let errors = {}
 
     try {
@@ -77,4 +80,21 @@ exports.signUp = async (req, res) => {
     } catch (error) {
         res.status(500).json({ errors: error.code })
     }
+}
+
+
+
+
+exports.test = async (req, res) => {
+    let resp = await db.collection('products').get()
+    console.log(resp.docs.length)
+    let arr = []
+    resp.docs.forEach(doc => {
+        arr.push(doc.data())
+    })
+
+    let productId = arr.map(product => product.productId)
+    console.log(productId)
+
+    console.log(productId.length)
 }

@@ -1,10 +1,11 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 var cors = require('cors');
+
 //Routes Import
-const { login, signUp } = require('./routes/authRoutes')
+const { login, signUp, test } = require('./routes/authRoutes')
 const { home, viewAll, fetchProductById } = require('./routes/dataRoutes')
-const { mapProductsToUser, fetchCheckoutProducts, getUserDetails, addAddress, deleteAddress, updateDefaultAddress } = require('./routes/userRoute')
+const { mapProductsToUser, fetchCheckoutProducts, getUserDetails, addAddress, deleteAddress, updateDefaultAddress, placeOrder, payWithRazorpay, paymentSuccess } = require('./routes/userRoute')
 //Middleware
 const verifyAuth = require('./utils/authMiddleware')
 
@@ -20,8 +21,11 @@ app.use(bodyParser.json());
 
 app.use(cors())
 
+
 //PORT
 const PORT = process.env.PORT || 5000
+
+
 
 
 
@@ -38,8 +42,12 @@ app.post('/api/addAddress', verifyAuth, addAddress)
 app.post('/api/deleteAddress', verifyAuth, deleteAddress)
 app.post('/api/updateDefaultAddress', verifyAuth, updateDefaultAddress)
 
+app.post('/api/placeOrder', verifyAuth, placeOrder)
+app.post('/api/payWithRazorpay', verifyAuth, payWithRazorpay)
+app.post('/api/paymentSuccess', verifyAuth, paymentSuccess)
+// app.get('/api/paymentFailure', verifyAuth, paymentFailure)
 
-
+app.get('/test', test)
 
 //SERVER
 app.listen(PORT, () => console.log("Api's Up and Running"))
