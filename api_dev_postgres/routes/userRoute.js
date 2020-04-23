@@ -100,7 +100,11 @@ exports.deleteAddress = async (req, res) => {
             if (user.defaultaddress === index) {
                 await db.query(addUserAddress(userId, arrOfAddress, 0))
             } else {
+                if (arrOfAddress.length - 1 < defaultAddress) {
+                    defaultAddress = arrOfAddress.length - 1
+                }
                 await db.query(addUserAddress(userId, arrOfAddress, defaultAddress))
+
             }
             res.status(200).json({
                 success: 'Address removed successfully'
@@ -242,53 +246,18 @@ exports.placeOrder = async (req, res) => {
     }
 }
 
-deleteCartCollection = async (userDocRef) => {
-
-    let cartItemsQuery = await userDocRef.collection('cart').get()
-
-    let cartItemsDocRef = getDocRef(cartItemsQuery.docs)
-    let counter = 0
-    if (cartItemsDocRef.length === 0) {
-        return { success: 'No Document in cart' }
-    }
-    else {
-        return new Promise((resolve, reject) => {
-            cartItemsDocRef.map(async doc => {
-                try {
-                    await doc.delete()
-                    counter++
-                    if (cartItemsDocRef.length === counter) {
-                        console.log("Deleted Successfully")
-                        resolve({ success: 'Deleted Succesfully' })
-                    }
-                } catch (err) {
-                    console.log(err)
-                    reject(err)
-                }
-
-            })
-        })
-    }
-
-}
-
-
-
-
 
 
 exports.payWithRazorpay = async (req, res) => {
     var instance = new Razorpay({ key_id: 'rzp_test_iG70itVrJp7Yhw', key_secret: 'M5nimokuCZa9QMvDU4TRCKaz' })
     let userId = req.user.id
     try {
-        let response = await db.collection('users').where('userId', '==', userId).get()
-        let userData = response.docs[0].data()
-        let userDocRef = response.docs[0].ref
 
-        let query = await userDocRef.collection('cart').get()
-        let userCartItems = getData(query.docs)
-
-        const { arrOfProducts, errors } = await getProducts(userCartItems)
+        let userQuery = await db.query(getUserById(userId))
+        let userData = userQuery.rows[0]
+        let userCartProducts = await db.query(getUserCartItems(userId))
+        let cartCount = await db.query(getCountForEachItem(userId))
+        let arrOfProducts = productInterpolation(mapCountToUserCartProduct(userCartProducts.rows, cartCount.rows));
 
         const getYouPay = (arr) => arr.map((item) => item.count * (item.discounted_price)).reduce((prev, curr) => curr + prev, 0)
 
@@ -299,7 +268,6 @@ exports.payWithRazorpay = async (req, res) => {
             receipt: 100 * Math.random(),
             payment_capture: 1,
         }).then(order => {
-            console.log(order)
             order.key = instance.key_id
             res.status(200).json({ order, userData })
         })
