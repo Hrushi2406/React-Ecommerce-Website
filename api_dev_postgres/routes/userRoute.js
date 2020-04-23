@@ -2,8 +2,8 @@ const { db, admin } = require('../utils/admin')
 const { addressValidator } = require('../utils/validator')
 const { getData, getProducts } = require('../utils/functions')
 
-const { getUserById } = require('../utils/query/userQuery')
-const { userInterpolation } = require('../utils/changeDataInterpolation')
+const { getUserById, getUserCartItems, deletePrevCartItems, addItemsToCart, getCountForEachItem } = require('../utils/query/userQuery')
+const { userInterpolation, productInterpolation } = require('../utils/changeDataInterpolation')
 
 const Razorpay = require('razorpay')
 
@@ -27,20 +27,10 @@ exports.mapProductsToUser = async (req, res) => {
     let userId = req.user.id
     console.log(userId)
     try {
-        let userDocRef = await getUserDocRef(userId)
-        // let earlierCartItems = await userDocRef.collection('cart').get()
-        let counter = 0
-        const { success } = await deleteCartCollection(userDocRef)
-        if (success) {
-            cartItems.forEach(async (item, i) => {
-                await userDocRef.collection('cart').doc(item.productId).set({
-                    cartItemId: item.productId,
-                    count: item.count,
-                    addedAt: admin.firestore.FieldValue.serverTimestamp()
-                })
-            })
-        }
-
+        await db.query(deletePrevCartItems(userId))
+        cartItems.forEach(async item => {
+            let response = await db.query(addItemsToCart(userId, item))
+        })
         res.status(200).json({ success: 'Item added to user Cart successfully' })
     } catch (err) {
         console.log(err)
@@ -52,14 +42,18 @@ exports.fetchCheckoutProducts = async (req, res) => {
     let userId = req.user.id
 
     try {
-        let userQuery = await db.collection('users').where('userId', '==', userId).get()
-        let userDocRef = userQuery.docs[0].ref
+        // let userQuery = await db.collection('users').where('userId', '==', userId).get()
+        // let userDocRef = userQuery.docs[0].ref
 
-        let query = await userDocRef.collection('cart').get()
-        let userCartItems = getData(query.docs)
-        let productsList = []
-        const { arrOfProducts, errors } = await getProducts(userCartItems)
-        productsList = arrOfProducts
+        // let query = await userDocRef.collection('cart').get()
+        // let userCartItems = getData(query.docs)
+        // let productsList = []
+        // const { arrOfProducts, errors } = await getProducts(userCartItems)
+        // productsList = arrOfProducts
+
+        let userCartProducts = await db.query(getUserCartItems(userId))
+        let cartCount = await db.query(getCountForEachItem(userId))
+        let cartProducts = productInterpolation(userCartProducts.rows)
 
         if (Object.keys(errors) != 0) {
             res.status(400).json(errors)

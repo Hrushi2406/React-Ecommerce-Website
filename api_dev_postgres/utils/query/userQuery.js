@@ -21,3 +21,31 @@ exports.getUserById = id => {
         values: [id]
     }
 }
+
+exports.getUserCartItems = id => {
+    return query = {
+        text: "(SELECT * FROM products WHERE productid IN (SELECT productid FROM cart WHERE userid = $1))",
+        values: [id]
+    }
+}
+
+exports.deletePrevCartItems = id => {
+    return query = {
+        text: "DELETE FROM cart WHERE userid = $1",
+        values: [id]
+    }
+}
+
+exports.getCountForEachItem = id => {
+    return query = {
+        text: "SELECT count FROM cart WHERE userid = $1",
+        values: [id]
+    }
+}
+
+exports.addItemsToCart = (userId, item) => {
+    return query = {
+        text: "INSERT INTO cart (userid, productid, count) VALUES ($1, $2, $3)",
+        values: [userId, item.productId, item.count]
+    }
+}
