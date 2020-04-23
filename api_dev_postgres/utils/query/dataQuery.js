@@ -23,3 +23,10 @@ exports.getBeltsLimit4 = () => {
         text: "SELECT * FROM products WHERE category2 = 'belts' LIMIT 4",
     }
 }
+
+exports.getProductById = id => {
+    return query = {
+        text: "SELECT * FROM products WHERE productid = $1",
+        values: [id]
+    }
+}

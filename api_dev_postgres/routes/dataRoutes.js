@@ -1,6 +1,6 @@
 const { db } = require("../utils/admin");
 
-const { getJacketsLimit4, getBeltsLimit4, getBagsLimit4, getWalletsLimit4 } = require('../utils/query/dataQuery')
+const { getProductById, getJacketsLimit4, getBeltsLimit4, getBagsLimit4, getWalletsLimit4 } = require('../utils/query/dataQuery')
 const { productInterpolation } = require('../utils/changeDataInterpolation')
 
 
@@ -95,14 +95,16 @@ exports.fetchProductById = async (req, res) => {
 
     arrOfId.forEach(async (id, index) => {
         try {
-            let response = await db.collection('products').where('productId', '==', id).get()
-            console.log(response.docs.length)
-            if (!response.empty) {
-                let product = response.docs[0].data()
+            let response = await db.query(getProductById(id))
+            // let response = await db.collection('products').where('productId', '==', id).get()
+            console.log(response.rowCount)
+            if (!response.rowCount == 0) {
+                let product = response.rows[0]
                 arrofProducts.push(product);
             }
             else {
                 res.status(400).json({ errors: 'No such product' })
+                return
             }
             if (arrOfId.length == index + 1) {
                 res.status(200).json({ arrofProducts })
