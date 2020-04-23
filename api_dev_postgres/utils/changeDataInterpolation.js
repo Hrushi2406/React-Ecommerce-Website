@@ -1,4 +1,4 @@
-exports.changeInterpolation = (data) => {
+exports.userInterpolation = (data) => {
     data.userId = data.userid
     data.addressList = data.addresslist
     data.defaultAddress = data.defaultaddress
@@ -7,3 +7,14 @@ exports.changeInterpolation = (data) => {
     delete data.defaultaddress
     return data
 }
+
+
+exports.productInterpolation = (arrOfProd) => {
+    arrOfProd.forEach(data => {
+        data.productId = data.productid
+        delete data.productid;
+    })
+    return arrOfProd
+
+}
+

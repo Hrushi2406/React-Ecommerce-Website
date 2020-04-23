@@ -1,4 +1,5 @@
-const { db } = require('./admin')
+const { db } = require('../admin')
+
 
 
 exports.getUserByEmail = (email) => {

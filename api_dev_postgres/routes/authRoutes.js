@@ -5,8 +5,8 @@ const dotenv = require('dotenv').config()
 
 const { loginValidator, signUpValidator } = require('../utils/validator')
 const { db } = require('../utils/admin')
-const { getUserByEmail, signUpUser } = require('../utils/query')
-const { changeInterpolation } = require('../utils/changeDataInterpolation')
+const { getUserByEmail, signUpUser } = require('../utils/query/userQuery')
+const { userInterpolation } = require('../utils/changeDataInterpolation')
 //LOGIN ROUTE
 exports.login = async (req, res) => {
     const user = {
@@ -31,8 +31,9 @@ exports.login = async (req, res) => {
             errors.email = "This user doesn't exist";
             res.status(400).json(errors)
         }
+
         let data = response.rows[0]
-        data = changeInterpolation(data)
+        data = userInterpolation(data)
         let result = await bcrypt.compare(user.password, data.password);
         if (result) {
             var token = jwt.sign({ id: data.userId }, process.env.ACCESS_TOKEN_SECRET)
@@ -75,7 +76,7 @@ exports.signUp = async (req, res) => {
             user.mobile = parseInt(user.mobile);
             let userResponse = await db.query(signUpUser(user))
             let data = userResponse.rows[0]
-            data = changeInterpolation(data)
+            data = userInterpolation(data)
             console.log(data)
             let token = jwt.sign({ id: data.userId }, process.env.ACCESS_TOKEN_SECRET)
             res.status(200).json({ token: token, auth: true, userData: data })
@@ -88,7 +89,6 @@ exports.signUp = async (req, res) => {
         res.status(500).json({ errors: error.code })
     }
 }
-
 
 
 

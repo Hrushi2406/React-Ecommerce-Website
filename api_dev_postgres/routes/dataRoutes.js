@@ -1,19 +1,26 @@
 const { db } = require("../utils/admin");
-const { getData } = require('../utils/functions')
+
+const { getJacketsLimit4, getBeltsLimit4, getBagsLimit4, getWalletsLimit4 } = require('../utils/query/dataQuery')
+const { productInterpolation } = require('../utils/changeDataInterpolation')
 
 
 exports.home = async (req, res) => {
     let productData = {}
     try {
-        let jacketsQuery = await db.collection('products').where('category2', '==', 'jackets').limit(4).get()
-        let bagsQuery = await db.collection('products').where('category2', '==', 'bags').limit(4).get()
-        let walletsQuery = await db.collection('products').where('category2', '==', 'wallets').limit(4).get()
-        let beltsQuery = await db.collection('products').where('category2', '==', 'belts').limit(4).get()
+        // let jacketsQuery = await db.collection('products').where('category2', '==', 'jackets').limit(4).get()
+        // let bagsQuery = await db.collection('products').where('category2', '==', 'bags').limit(4).get()
+        // let walletsQuery = await db.collection('products').where('category2', '==', 'wallets').limit(4).get()
+        // let beltsQuery = await db.collection('products').where('category2', '==', 'belts').limit(4).get()
 
-        productData.jackets = getData(jacketsQuery.docs)
-        productData.wallets = getData(walletsQuery.docs)
-        productData.bags = getData(bagsQuery.docs)
-        productData.belts = getData(beltsQuery.docs)
+        let jacketsQuery = await db.query(getJacketsLimit4())
+        let bagsQuery = await db.query(getBagsLimit4())
+        let walletsQuery = await db.query(getWalletsLimit4())
+        let beltsQuery = await db.query(getBeltsLimit4())
+        productData.jackets = productInterpolation(jacketsQuery.rows)
+        productData.wallets = productInterpolation(walletsQuery.rows)
+        productData.bags = productInterpolation(bagsQuery.rows)
+        productData.belts = productInterpolation(beltsQuery.rows)
+
         res.status(200).json({ productData })
 
     } catch (err) {
