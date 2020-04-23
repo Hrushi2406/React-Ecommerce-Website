@@ -127,17 +127,14 @@ exports.deleteAddress = async (req, res) => {
 exports.updateDefaultAddress = async (req, res) => {
     let userId = req.user.id
     let defaultAddress = req.body.defaultAddress
-
     try {
-        let response = await db.collection('users').where('userId', '==', userId).get()
-        let userData = response.docs[0].data()
-        if (userData.defaultAddress === defaultAddress) {
+        let response = await db.query(getUserById(userId))
+        let user = response.rows[0]
+        if (user.defaultaddress === defaultAddress) {
             res.status(200).json({ general: "Already set as default Address" })
         }
         else {
-            await response.docs[0].ref.update({
-                defaultAddress: defaultAddress
-            })
+            await db.query(addUserAddress(userId, user.addresslist, defaultAddress))
             res.status(200).json({ success: "Update default address" })
         }
     } catch (err) {
