@@ -1,7 +1,7 @@
 const { db } = require('./admin')
 
 
-exports.isUserByEmail = (email) => {
+exports.getUserByEmail = (email) => {
     return query = {
         text: "SELECT * FROM users WHERE email = $1",
         values: [email]

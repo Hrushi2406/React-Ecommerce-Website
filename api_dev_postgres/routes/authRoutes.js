@@ -5,8 +5,8 @@ const dotenv = require('dotenv').config()
 
 const { loginValidator, signUpValidator } = require('../utils/validator')
 const { db } = require('../utils/admin')
-const { isUserByEmail, signUpUser } = require('../utils/query')
-
+const { getUserByEmail, signUpUser } = require('../utils/query')
+const { changeInterpolation } = require('../utils/changeDataInterpolation')
 //LOGIN ROUTE
 exports.login = async (req, res) => {
     const user = {
@@ -26,21 +26,21 @@ exports.login = async (req, res) => {
             text: "SELECT * FROM users WHERE email = $1",
             values: [user.email]
         }
-        let response = await db.query(isUserByEmail(user.email))
-        // console.log(response.rowCount)
+        let response = await db.query(getUserByEmail(user.email))
         if (response.rowCount === 0) {
             errors.email = "This user doesn't exist";
             res.status(400).json(errors)
         }
-        // let data = response.docs[0].data()
-        // let result = await bcrypt.compare(user.password, data.password);
-        // if (result) {
-        //     var token = jwt.sign({ id: data.userId }, process.env.ACCESS_TOKEN_SECRET)
-        // } else {
-        //     errors.password = "Password is Incorrect"
-        //     res.status(400).json(errors)
-        // }
-        // res.status(200).json({ token: token, auth: result, userData: data })
+        let data = response.rows[0]
+        data = changeInterpolation(data)
+        let result = await bcrypt.compare(user.password, data.password);
+        if (result) {
+            var token = jwt.sign({ id: data.userId }, process.env.ACCESS_TOKEN_SECRET)
+        } else {
+            errors.password = "Password is Incorrect"
+            res.status(400).json(errors)
+        }
+        res.status(200).json({ token: token, auth: result, userData: data })
     } catch (error) {
         res.status(500).json({ errors: error.code })
     }
@@ -75,12 +75,7 @@ exports.signUp = async (req, res) => {
             user.mobile = parseInt(user.mobile);
             let userResponse = await db.query(signUpUser(user))
             let data = userResponse.rows[0]
-            data.userId = data.userid
-            data.addressList = data.addresslist
-            data.defaultAddress = data.defaultaddress
-            delete data.userid;
-            delete data.addresslist
-            delete data.defaultaddress
+            data = changeInterpolation(data)
             console.log(data)
             let token = jwt.sign({ id: data.userId }, process.env.ACCESS_TOKEN_SECRET)
             res.status(200).json({ token: token, auth: true, userData: data })
