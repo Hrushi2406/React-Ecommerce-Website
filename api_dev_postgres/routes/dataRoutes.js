@@ -99,7 +99,7 @@ exports.fetchProductById = async (req, res) => {
             // let response = await db.collection('products').where('productId', '==', id).get()
             console.log(response.rowCount)
             if (!response.rowCount == 0) {
-                let product = response.rows[0]
+                let product = productInterpolation(response.rows)[0]
                 arrofProducts.push(product);
             }
             else {

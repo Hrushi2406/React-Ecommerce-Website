@@ -22,10 +22,6 @@ exports.login = async (req, res) => {
         if (!valid) {
             res.status(400).json(errors)
         }
-        let query = {
-            text: "SELECT * FROM users WHERE email = $1",
-            values: [user.email]
-        }
         let response = await db.query(getUserByEmail(user.email))
         if (response.rowCount === 0) {
             errors.email = "This user doesn't exist";

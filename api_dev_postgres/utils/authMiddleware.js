@@ -1,4 +1,4 @@
-https://leather-b123b.web.app/const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 module.exports = (req, res, next) => {
     let token = req.headers.authorization

@@ -2,6 +2,9 @@ const { db, admin } = require('../utils/admin')
 const { addressValidator } = require('../utils/validator')
 const { getData, getProducts } = require('../utils/functions')
 
+const { getUserById } = require('../utils/query/userQuery')
+const { userInterpolation } = require('../utils/changeDataInterpolation')
+
 const Razorpay = require('razorpay')
 
 
@@ -72,8 +75,8 @@ exports.fetchCheckoutProducts = async (req, res) => {
 exports.getUserDetails = async (req, res) => {
     let userId = req.user.id
     try {
-        let response = await db.collection('users').where('userId', '==', userId).get()
-        let userData = response.docs[0].data()
+        let response = await db.query(getUserById(userId))
+        let userData = userInterpolation(response.rows[0])
         res.status(200).json({ userData })
     } catch (err) {
         res.status(500).json(err)
