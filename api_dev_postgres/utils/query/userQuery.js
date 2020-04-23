@@ -56,3 +56,25 @@ exports.addUserAddress = (userId, addressList, defaultaddress) => {
         values: [addressList, defaultaddress, userId]
     }
 }
+
+exports.addProductsToOrders = (orderId, userId, product) => {
+    return query = {
+        text: "INSERT INTO orders (orderid, userid, productid) VALUES ($1, $2, $3)",
+        values: [orderId, userId, product.productId]
+    }
+}
+
+
+exports.addProductsToOrderDetails = (orderId, data) => {
+    return query = {
+        text: "INSERT INTO orderDetails (orderid, deliveryat, paymentmethod, amount, status) VALUES ($1, $2, $3, $4, $5)",
+        values: [orderId, data.deliveryAt, data.paymentMethod, data.amount, data.status]
+    }
+}
+
+exports.decreaseStock = (product) => {
+    return query = {
+        text: "UPDATE products SET stock = (SELECT stock FROM products WHERE productid = $1) - $2 ",
+        values: [product.productId, product.count]
+    }
+}

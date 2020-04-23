@@ -2,7 +2,7 @@ const { db, admin } = require('../utils/admin')
 const { addressValidator } = require('../utils/validator')
 const { getData, getProducts, mapCountToUserCartProduct } = require('../utils/functions')
 
-const { getUserById, getUserCartItems, deletePrevCartItems, addItemsToCart, getCountForEachItem, addUserAddress } = require('../utils/query/userQuery')
+const { getUserById, getUserCartItems, deletePrevCartItems, addItemsToCart, getCountForEachItem, addUserAddress, addProductsToOrders, addProductsToOrderDetails, decreaseStock } = require('../utils/query/userQuery')
 const { userInterpolation, productInterpolation } = require('../utils/changeDataInterpolation')
 
 
@@ -26,10 +26,11 @@ getDocRef = (arr) => {
 exports.mapProductsToUser = async (req, res) => {
     let cartItems = req.body.cartItems
     let userId = req.user.id
-    console.log(userId)
     try {
         await db.query(deletePrevCartItems(userId))
         cartItems.forEach(async item => {
+            console.log(item.count)
+
             let response = await db.query(addItemsToCart(userId, item))
         })
         res.status(200).json({ success: 'Item added to user Cart successfully' })
@@ -151,85 +152,71 @@ exports.placeOrder = async (req, res) => {
     let userId = req.user.id
     let paymentMethod = req.body.paymentMethod
     try {
-        let response = await db.collection('users').where('userId', '==', userId).get()
-        let userData = response.docs[0].data()
-        let userDocRef = response.docs[0].ref
 
-        let query = await userDocRef.collection('cart').get()
-        let userCartItems = getData(query.docs)
+        let cartCount = await db.query(getCountForEachItem(userId))
+
+        let response = await db.query(getUserById(userId))
+        let userData = response.rows[0]
+
+        let query = await db.query(getUserCartItems(userId))
+        let userCartItems = query.rows
         let counter = 0
 
         //Fetch Products 
-        const { arrOfProducts, errors } = await getProducts(userCartItems)
+        let arrOfProducts = productInterpolation(mapCountToUserCartProduct(userCartItems, cartCount.rows));
+
         //Check Payment Type
         const getYouPay = (arr) => arr.map((item) => item.count * (item.discounted_price)).reduce((prev, curr) => curr + prev, 0)
 
         let data = {
             userDetails: userData,
-            paymentDetails: {
-                paymentMethod: paymentMethod,
-                amount: getYouPay(arrOfProducts),
-                status: 'pending'
-            },
-            deliveryAt: userData.addressList[userData.defaultAddress],
-            orderedAt: admin.firestore.FieldValue.serverTimestamp()
+            paymentMethod: paymentMethod,
+            amount: getYouPay(arrOfProducts),
+            status: 'pending',
+            deliveryAt: userData.addresslist[userData.defaultaddress],
         }
 
-        addOrdersToDatabase = () => new Promise((resolve, reject) => {
-            let orderCollectionRef = db.collection('orders').doc()
+        console.log(arrOfProducts.length)
 
-            data.orderId = orderCollectionRef.id
-
-            const batch = db.batch()
+        const addOrdersToDatabase = () => new Promise(async (resolve, reject) => {
+            var nextOrder = await db.query("Select nextval(pg_get_serial_sequence('orders', 'orderid')) as new_id")
+            var orderId = nextOrder.rows[0].new_id
 
             arrOfProducts.forEach(async product => {
-
                 if (product.stock >= product.count) {
-                    //Add data to orders collection
-                    batch.set(orderCollectionRef, data)
-                    //decrease stock
-                    let productRef = db.collection('products').doc(product.productId)
-                    batch.update(productRef, { stock: admin.firestore.FieldValue.increment(-product.count) })
+                    //BEGIN
+                    await db.query("BEGIN")
 
-                    //Add products to user order
-                    let ordersRef = userDocRef.collection('orders').doc()
-                    product.orderId = orderCollectionRef.id
-                    batch.set(ordersRef, product)
+                    //ADD TO ORDERS TABLE
+                    await db.query(addProductsToOrders(orderId, userId, product))
+                    //ADD TO ORDER DETAILS
+                    //DECREASE ITEM STOCK
+                    await db.query(decreaseStock(product))
+                    //COMMIT
+                    await db.query('COMMIT')
 
-                    //Add product to orders collection
-                    let productDocRef = orderCollectionRef.collection('orderedItems').doc()
-
-                    batch.set(productDocRef, product)
-                }
-                else {
+                } else {
                     reject({ general: product.title + " product is currently out of stock" })
                     return
                 }
                 counter++
-                console.log(counter, product.title)
                 if (counter === arrOfProducts.length) {
-                    await batch.commit()
-                    await deleteCartCollection(userDocRef)
+                    await db.query(addProductsToOrderDetails(orderId, data))
+                    await db.query(deletePrevCartItems(userId))
                     resolve({ success: 'Your Order has been placed successfully' })
                 }
             })
         })
 
-
-
         if (paymentMethod === 'cod') {
             let response = await addOrdersToDatabase()
-            console.log(response)
             if (response) {
                 res.status(200).json(response)
             }
         }
         else if (paymentMethod == "razorpay") {
-            let paymentInfo = req.body.paymentDetails
-            data.paymentDetails.status = 'paid'
-            data.paymentDetails.info = paymentInfo
+            data.status = 'paid'
             let response = await addOrdersToDatabase()
-            console.log(response)
             if (response) {
                 res.status(200).json(response)
             }
@@ -281,9 +268,6 @@ exports.payWithRazorpay = async (req, res) => {
 }
 
 
-exports.paymentSuccess = (req, res) => {
-    console.log(req)
-}
 
 
 //381559

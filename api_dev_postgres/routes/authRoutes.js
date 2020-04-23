@@ -21,11 +21,13 @@ exports.login = async (req, res) => {
 
         if (!valid) {
             res.status(400).json(errors)
+            return
         }
         let response = await db.query(getUserByEmail(user.email))
         if (response.rowCount === 0) {
             errors.email = "This user doesn't exist";
             res.status(400).json(errors)
+            return
         }
 
         let data = response.rows[0]
@@ -36,6 +38,7 @@ exports.login = async (req, res) => {
         } else {
             errors.password = "Password is Incorrect"
             res.status(400).json(errors)
+            return
         }
         res.status(200).json({ token: token, auth: result, userData: data })
     } catch (error) {
@@ -53,8 +56,6 @@ exports.signUp = async (req, res) => {
         confirmPassword: req.body.confirmPassword,
         dob: req.body.dob,
         mobile: parseInt(req.body.mobile),
-        addressList: null,
-        defaultAddress: null,
     }
     console.log(user.mobile)
     let errors = {}
@@ -64,8 +65,11 @@ exports.signUp = async (req, res) => {
         errors = error;
         if (!valid) {
             res.status(400).json(errors)
+            return
         }
-        let response = await db.query(isUserByEmail(user.email))
+        let response = await db.query(getUserByEmail(user.email))
+        console.log(response.rows)
+
         if (response.rowCount === 0) {
             user.password = await bcrypt.hash(user.password, 10)
             delete user.confirmPassword;

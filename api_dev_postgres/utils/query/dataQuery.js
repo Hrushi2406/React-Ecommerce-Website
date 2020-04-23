@@ -14,7 +14,7 @@ exports.getBagsLimit4 = () => {
 
 exports.getWalletsLimit4 = () => {
     return query = {
-        text: "SELECT * FROM products WHERE category2 = 'bags' LIMIT 4",
+        text: "SELECT * FROM products WHERE category2 = 'wallets' LIMIT 4",
     }
 }
 

@@ -5,7 +5,7 @@ var cors = require('cors');
 //Routes Import
 const { login, signUp, test } = require('./routes/authRoutes')
 const { home, viewAll, fetchProductById } = require('./routes/dataRoutes')
-const { mapProductsToUser, fetchCheckoutProducts, getUserDetails, addAddress, deleteAddress, updateDefaultAddress, placeOrder, payWithRazorpay, paymentSuccess } = require('./routes/userRoute')
+const { mapProductsToUser, fetchCheckoutProducts, getUserDetails, addAddress, deleteAddress, updateDefaultAddress, placeOrder, payWithRazorpay } = require('./routes/userRoute')
 //Middleware
 const verifyAuth = require('./utils/authMiddleware')
 
@@ -44,7 +44,6 @@ app.post('/api/updateDefaultAddress', verifyAuth, updateDefaultAddress)
 
 app.post('/api/placeOrder', verifyAuth, placeOrder)
 app.post('/api/payWithRazorpay', verifyAuth, payWithRazorpay)
-app.post('/api/paymentSuccess', verifyAuth, paymentSuccess)
 // app.get('/api/paymentFailure', verifyAuth, paymentFailure)
 
 app.get('/test', test)
