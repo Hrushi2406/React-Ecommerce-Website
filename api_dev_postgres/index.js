@@ -33,7 +33,7 @@ const PORT = process.env.PORT || 7000
 app.post('/api/login', login)
 app.post('/api/signUp', signUp)
 app.get('/api/', home)
-app.get('/api/products/:key', viewAll)
+app.get('/api/products/:key', viewAll) //REMAINING
 app.get('/api/fetchProducts', fetchProductById)
 app.get('/api/userDetails', verifyAuth, getUserDetails)
 app.get('/api/checkoutProducts', verifyAuth, fetchCheckoutProducts)

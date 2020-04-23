@@ -49,3 +49,10 @@ exports.addItemsToCart = (userId, item) => {
         values: [userId, item.productId, item.count]
     }
 }
+
+exports.addUserAddress = (userId, addressList, defaultaddress) => {
+    return query = {
+        text: "UPDATE users SET addresslist = $1, defaultaddress = $2 WHERE userid = $3 ",
+        values: [addressList, defaultaddress, userId]
+    }
+}

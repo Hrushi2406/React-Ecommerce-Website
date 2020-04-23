@@ -2,7 +2,7 @@ const { db, admin } = require('../utils/admin')
 const { addressValidator } = require('../utils/validator')
 const { getData, getProducts, mapCountToUserCartProduct } = require('../utils/functions')
 
-const { getUserById, getUserCartItems, deletePrevCartItems, addItemsToCart, getCountForEachItem } = require('../utils/query/userQuery')
+const { getUserById, getUserCartItems, deletePrevCartItems, addItemsToCart, getCountForEachItem, addUserAddress } = require('../utils/query/userQuery')
 const { userInterpolation, productInterpolation } = require('../utils/changeDataInterpolation')
 
 
@@ -41,7 +41,6 @@ exports.mapProductsToUser = async (req, res) => {
 
 exports.fetchCheckoutProducts = async (req, res) => {
     let userId = req.user.id
-
     try {
         let userCartProducts = await db.query(getUserCartItems(userId))
         let cartCount = await db.query(getCountForEachItem(userId))
@@ -66,22 +65,21 @@ exports.getUserDetails = async (req, res) => {
 exports.addAddress = async (req, res) => {
     let userId = req.user.id
     let userAddress = req.body.userAddress
-    console.log(userAddress)
     try {
-        let response = await db.collection('users').where('userId', '==', userId).get()
-        let userData = response.docs[0].data()
-        let arrOfAddress = userData.addressList == null ? [] : userData.addressList
-        if (arrOfAddress.indexOf(userAddress) == -1) {
-            arrOfAddress.push(userAddress)
-            await response.docs[0].ref.update({
-                addressList: arrOfAddress,
-                defaultAddress: userData.defaultAddress == undefined ? 0 : userData.defaultAddress
-            })
+
+        let response = await db.query(getUserById(userId))
+        let user = response.rows[0]
+        let userAddressList = user.addresslist == null ? [] : user.addresslist
+        let defaultAddress = user.defaultaddress == null ? 0 : user.defaultaddress
+
+        if (userAddressList.indexOf(userAddress) == -1) {
+            userAddressList.push(userAddress);
+            await db.query(addUserAddress(userId, userAddressList, defaultAddress))
             res.status(200).json({ success: 'Address Saved Successfully' })
-        }
-        else {
+        } else {
             res.status(400).json({ general: 'Address already exists' })
         }
+
     } catch (err) {
         res.status(500).json(err)
     }
