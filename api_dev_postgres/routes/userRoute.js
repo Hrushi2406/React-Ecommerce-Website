@@ -90,38 +90,34 @@ exports.deleteAddress = async (req, res) => {
     let userId = req.user.id
     let index = req.body.index
     try {
-        let response = await db.collection('users').where('userId', '==', userId).get()
-        let userData = response.docs[0].data()
-        let arrOfAddress = userData.addressList
+        let response = await db.query(getUserById(userId))
+        let user = response.rows[0]
+        let arrOfAddress = user.addresslist == null ? [] : user.addresslist
+        let defaultAddress = user.defaultaddress == null ? 0 : user.defaultaddress
 
         if (arrOfAddress.length > 1) {
             arrOfAddress.splice(index, 1)
-            if (userData.defaultAddress === index) {
-                await response.docs[0].ref.update({
-                    addressList: arrOfAddress,
-                    defaultAddress: 0
-                })
+            if (user.defaultaddress === index) {
+                await db.query(addUserAddress(userId, arrOfAddress, 0))
             } else {
-                await response.docs[0].ref.update({
-                    addressList: arrOfAddress,
-                })
+                await db.query(addUserAddress(userId, arrOfAddress, defaultAddress))
             }
+            res.status(200).json({
+                success: 'Address removed successfully'
+            })
+        } else if (arrOfAddress.length == 1) {
+            arrOfAddress.splice(index, 1)
+            await db.query(addUserAddress(userId, null, null))
             res.status(200).json({
                 success: 'Address removed successfully'
             })
         }
         else {
-            await response.docs[0].ref.update({
-                addressList: null,
-                defaultAddress: null,
-            })
-            res.status(200).json({
-                success: 'Address removed successfully'
+            res.status(400).json({
+                general: "You don't have any address to remove"
             })
         }
-        res.status(400).json({
-            general: "You cannot delete your last saved address"
-        })
+
 
     } catch (err) {
         res.status(500).json(err)
