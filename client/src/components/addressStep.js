@@ -116,7 +116,7 @@ class addressStep extends Component {
                             {
                                 addressList.map((add, i) => {
                                     return <div key={i} className="summaryHeader" onClick={() => this.setSelectedAddress(i)} style={selectedAddress === i ? { transition: '0.2s', background: '#bbbbbb', color: '#fff' } : {}}>
-                                        <Typography>{add}</Typography>
+                                        <Typography variant='body1' >{add}</Typography>
                                     </div>
                                 })
                             }
