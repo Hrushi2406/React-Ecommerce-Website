@@ -41,3 +41,15 @@ module.exports.getProducts = async (arrOfCartItems) => {
 
 
 }
+
+
+
+
+
+exports.mapCountToUserCartProduct = (cartProducts, prodCount) => {
+    cartProducts.forEach(prod => {
+        let product = prodCount.filter(count => count.productid = prod.productid)[0]
+        prod.count = product.count
+    })
+    return cartProducts
+}

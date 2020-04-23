@@ -89,14 +89,16 @@ exports.viewAll = async (req, res) => {
 
 exports.fetchProductById = async (req, res) => {
     let productId = req.query.productId
-    console.log(productId.split(", "))
+    if (productId == undefined) {
+        res.status(400).json({ errors: "No ID provided" })
+        return
+    }
     let arrOfId = productId.split(", ")
     let arrofProducts = []
 
     arrOfId.forEach(async (id, index) => {
         try {
             let response = await db.query(getProductById(id))
-            // let response = await db.collection('products').where('productId', '==', id).get()
             console.log(response.rowCount)
             if (!response.rowCount == 0) {
                 let product = productInterpolation(response.rows)[0]

@@ -1,9 +1,10 @@
 const { db, admin } = require('../utils/admin')
 const { addressValidator } = require('../utils/validator')
-const { getData, getProducts } = require('../utils/functions')
+const { getData, getProducts, mapCountToUserCartProduct } = require('../utils/functions')
 
 const { getUserById, getUserCartItems, deletePrevCartItems, addItemsToCart, getCountForEachItem } = require('../utils/query/userQuery')
 const { userInterpolation, productInterpolation } = require('../utils/changeDataInterpolation')
+
 
 const Razorpay = require('razorpay')
 
@@ -42,25 +43,10 @@ exports.fetchCheckoutProducts = async (req, res) => {
     let userId = req.user.id
 
     try {
-        // let userQuery = await db.collection('users').where('userId', '==', userId).get()
-        // let userDocRef = userQuery.docs[0].ref
-
-        // let query = await userDocRef.collection('cart').get()
-        // let userCartItems = getData(query.docs)
-        // let productsList = []
-        // const { arrOfProducts, errors } = await getProducts(userCartItems)
-        // productsList = arrOfProducts
-
         let userCartProducts = await db.query(getUserCartItems(userId))
         let cartCount = await db.query(getCountForEachItem(userId))
-        let cartProducts = productInterpolation(userCartProducts.rows)
-
-        if (Object.keys(errors) != 0) {
-            res.status(400).json(errors)
-        }
-        else {
-            res.status(200).json({ productsList })
-        }
+        let productsList = productInterpolation(mapCountToUserCartProduct(userCartProducts.rows, cartCount.rows));
+        res.status(200).json({ productsList })
     } catch (err) {
         res.status(500).json(err)
     }

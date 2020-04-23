@@ -24,7 +24,7 @@ exports.getUserById = id => {
 
 exports.getUserCartItems = id => {
     return query = {
-        text: "(SELECT * FROM products WHERE productid IN (SELECT productid FROM cart WHERE userid = $1))",
+        text: "SELECT * FROM products WHERE productid IN (SELECT productid FROM cart WHERE userid = $1)",
         values: [id]
     }
 }
@@ -38,7 +38,7 @@ exports.deletePrevCartItems = id => {
 
 exports.getCountForEachItem = id => {
     return query = {
-        text: "SELECT count FROM cart WHERE userid = $1",
+        text: "SELECT productid,count FROM cart WHERE userid = $1",
         values: [id]
     }
 }
