@@ -1,0 +1,28 @@
+[
+  {
+    "supplier1": {
+      "name": "J.J. Leather Products",
+      "address": "92, Patthe Bapurao Marg, PB Marg, next to Kalpana Palace Hotel, near Daulat Complex, Grant Road East, Bharat Nagar, Grant Road, Mumbai, Maharashtra 400008, India",
+      "lat": "18.963276080095508",
+      "lon": "72.82174408435822"
+    },
+    "supplier2": {
+      "name": "Ozone Pure Leather Bags",
+      "address": "Indira Nagar, Vidyavihar Society, Vidyavihar, Mumbai, Maharashtra 400086, India",
+      "lat": "19.082878982863395",
+      "lon": "72.89301842451096"
+    },
+    "supplier3": {
+      "name": "Linking leather",
+      "address": "RW Sawant Rd, Panchsheel Nagar, Thane West, Thane, Maharashtra 400601, India",
+      "lat": "19.211434576645324",
+      "lon": "72.97854200005533"
+    },
+    "supplier4": {
+      "name": "Jacky Jackets",
+      "address": "A-5, Chandan Shanti, Mira Road, Mira Bhayandar, Maharashtra 401107, India",
+      "lat": "19.28860438207657",
+      "lon": "72.87207908928394"
+    }
+  }
+]
