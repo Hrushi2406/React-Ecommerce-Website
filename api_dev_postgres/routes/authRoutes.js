@@ -95,16 +95,16 @@ exports.signUp = async (req, res) => {
   }
 };
 
-exports.test = async (req, res) => {
-  let resp = await db.collection("products").get();
-  console.log(resp.docs.length);
-  let arr = [];
-  resp.docs.forEach((doc) => {
-    arr.push(doc.data());
-  });
+// exports.test = async (req, res) => {
+//   let resp = await db.collection("products").get();
+//   console.log(resp.docs.length);
+//   let arr = [];
+//   resp.docs.forEach((doc) => {
+//     arr.push(doc.data());
+//   });
 
-  let productId = arr.map((product) => product.productId);
-  console.log(productId);
+//   let productId = arr.map((product) => product.productId);
+//   console.log(productId);
 
-  console.log(productId.length);
-};
+//   console.log(productId.length);
+// };
